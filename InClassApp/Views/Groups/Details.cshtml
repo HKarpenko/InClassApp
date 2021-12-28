@@ -1,0 +1,96 @@
+﻿@model InClassApp.Models.Entities.Group
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Group</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StudiesSemestr)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StudiesSemestr)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Subject)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Subject.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Lecturer)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Lecturer.User.UserName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StartDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StartDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EndDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EndDate)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<h4 class="mt-4">Meetings</h4>
+<p>
+    <a href="@Url.Action("Create", "Meetings", new { groupId = Model.Id })">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                MeetingStartDate
+            </th>
+            <th>
+                MeetingEndDate
+            </th>
+            <th>
+                Group
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.Meetings)
+        {
+            <tr>
+                <td>
+                    @item.MeetingStartDate
+                </td>
+                <td>
+                    @item.MeetingEndDate
+                </td>
+                <td>
+                    @item.Group.Name
+                </td>
+                <td>
+                    <a asp-controller="Meetings" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-controller="Meetings" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-controller="Meetings" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

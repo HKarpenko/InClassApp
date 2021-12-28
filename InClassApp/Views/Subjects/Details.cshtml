@@ -1,0 +1,89 @@
+﻿@model InClassApp.Models.Entities.Subject
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Subject</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Code)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Code)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+@if (ViewBag.Groups.Count > 0)
+{
+    <h4 class="mt-4">Active Groups</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    StudiesSemestr
+                </th>
+                <th>
+                    Subject
+                </th>
+                <th>
+                    Lecturer
+                </th>
+                <th>
+                    StartDate
+                </th>
+                <th>
+                    EndDate
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.Groups)
+            {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.StudiesSemestr
+                </td>
+                <td>
+                    @item.Subject.Name
+                </td>
+                <td>
+                    @item.Lecturer.User.UserName
+                </td>
+                <td>
+                    @item.StartDate
+                </td>
+                <td>
+                    @item.EndDate
+                </td>
+                <td>
+                    <a asp-controller="Groups" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-controller="Groups" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-controller="Groups" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -7,7 +7,5 @@ namespace InClassApp.Models.Entities
         public string Name { get; set; }
 
         public string Surname { get; set; }
-
-        public string Index { get; set; }
     }
 }

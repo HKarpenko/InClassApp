@@ -19,5 +19,6 @@ namespace InClassApp.Data
         public DbSet<Group> Groups { get; set; }
         public DbSet<Meeting> Meetings { get; set; }
         public DbSet<PresenceRecord> PresenceRecords { get; set; }
+        public DbSet<InClassApp.Models.Entities.Student> Student { get; set; }
     }
 }

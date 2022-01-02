@@ -2,22 +2,20 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Web;
+using System.Threading.Tasks;
 
 namespace InClassApp.Models.Entities
 {
-    public class PresenceRecord : Entity
+    public class StudentGroupRelation : Entity
     {
-        [ForeignKey(nameof(Meeting))]
-        public int MeetingId { get; set; }
+        [ForeignKey(nameof(Group))]
+        public int GroupId { get; set; }
 
-        public Meeting Meeting { get; set; }
+        public Group Group { get; set; }
 
         [ForeignKey(nameof(Student))]
         public int StudentId { get; set; }
 
         public Student Student { get; set; }
-
-        public bool Status { get; set; }
     }
 }

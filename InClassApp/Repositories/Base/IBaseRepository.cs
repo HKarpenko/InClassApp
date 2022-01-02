@@ -9,6 +9,9 @@ namespace InClassApp.Repositories.Base
         Task<int> Update(TEntity group);
         Task<List<TEntity>> GetAll();
         Task<TEntity> GetById(int id);
+        Task<TEntity> GetByIdAsNoTracking(int id);
+        Task<List<TEntity>> GetByIds(IEnumerable<int> ids);
         Task<bool> Delete(int id);
+        void Save();
     }
 }

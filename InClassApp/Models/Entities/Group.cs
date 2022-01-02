@@ -25,5 +25,7 @@ namespace InClassApp.Models.Entities
         public DateTime? EndDate { get; set; }
 
         public ICollection<Meeting> Meetings { get; set; }
+
+        public ICollection<StudentGroupRelation> StudentGroupRelations { get; set; }
     }
 }

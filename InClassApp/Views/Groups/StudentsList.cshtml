@@ -1,0 +1,40 @@
+﻿@model IEnumerable<InClassApp.Models.Entities.Student>
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<h1>Group students</h1>
+
+<p>
+    <a href="@Url.Action("AddStudent", "Groups", new { groupId = ViewBag.GroupId })">Add</a> |
+    <a href="@Url.Action("Details", "Groups", new { id = ViewBag.GroupId })">Back to group</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.User.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Index)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Index)
+            </td>
+            <td>
+                <a href="@Url.Action("RemoveStudent", "Groups", new { studentId = item.Id, groupId = ViewBag.GroupId })">Remove</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

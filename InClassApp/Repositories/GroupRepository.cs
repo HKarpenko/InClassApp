@@ -23,6 +23,9 @@ namespace InClassApp.Repositories
                 .Include(x => x.Subject)
                 .Include(x => x.Lecturer)
                     .ThenInclude(l => l.User)
+                .Include(x => x.StudentGroupRelations)
+                    .ThenInclude(r => r.Student)
+                        .ThenInclude(s => s.User)
                 .ToListAsync();
         }
 
@@ -30,8 +33,12 @@ namespace InClassApp.Repositories
         {
             return await _context.Groups
                  .Include(x => x.Subject)
+                 .Include(x => x.Meetings)
                  .Include(x => x.Lecturer)
                     .ThenInclude(l => l.User)
+                 .Include(x => x.StudentGroupRelations)
+                    .ThenInclude(r => r.Student)
+                        .ThenInclude(s => s.User)
                  .Where(x => x.Id == id)
                  .FirstOrDefaultAsync();
         }
@@ -42,8 +49,39 @@ namespace InClassApp.Repositories
                  .Include(x => x.Subject)
                  .Include(x => x.Lecturer)
                     .ThenInclude(l => l.User)
+                 .Include(x => x.StudentGroupRelations)
+                    .ThenInclude(r => r.Student)
+                        .ThenInclude(s => s.User)
                  .Where(x => x.SubjectId == subjectId)
                  .ToListAsync();
+        }
+
+        public async Task<int> AddStudentGroupRelation(int studentId, int groupId)
+        {
+            var relation = new StudentGroupRelation
+            {
+                StudentId = studentId,
+                GroupId = groupId
+            };
+            _context.Set<StudentGroupRelation>().Add(relation);
+            await _context.SaveChangesAsync();
+            
+            return relation.Id;
+        }
+
+        public async Task<bool> DeleteStudentGroupRelation(int studentId, int groupId)
+        {
+            var group = await GetById(groupId);
+            var relation = group.StudentGroupRelations.FirstOrDefault(r => r.StudentId == studentId);
+            if(relation == null)
+            {
+                return false;
+            }
+
+            _context.Set<StudentGroupRelation>().Remove(relation);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

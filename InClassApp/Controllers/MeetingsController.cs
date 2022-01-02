@@ -90,7 +90,7 @@ namespace InClassApp.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("MeetingStartDate,MeetingEndDate,GroupId,Id")] Meeting meeting)
+        public async Task<IActionResult> Edit(int id, [Bind("MeetingStartDate,MeetingEndDate,Id")] Meeting meeting)
         {
             if (id != meeting.Id)
             {
@@ -101,6 +101,7 @@ namespace InClassApp.Controllers
             {
                 try
                 {
+                    meeting.GroupId = (await _meetingRepository.GetByIdAsNoTracking(id)).GroupId;
                     await _meetingRepository.Update(meeting);
                 }
                 catch (DbUpdateConcurrencyException)

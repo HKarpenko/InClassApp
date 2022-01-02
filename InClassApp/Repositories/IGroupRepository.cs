@@ -8,5 +8,9 @@ namespace InClassApp.Repositories
     public interface IGroupRepository : IBaseRepository<Group> 
     {
         Task<List<Group>> GetGroupsBySubjectId(int subjectId);
+
+        Task<int> AddStudentGroupRelation(int studentId, int groupId);
+
+        Task<bool> DeleteStudentGroupRelation(int studentId, int groupId);
     }
 }

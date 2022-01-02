@@ -46,6 +46,21 @@ namespace InClassApp.Repositories.Base
                  .FirstOrDefaultAsync();
         }
 
+        public async Task<TEntity> GetByIdAsNoTracking(int id)
+        {
+            return await _context.Set<TEntity>()
+                 .AsNoTracking()
+                 .Where(x => x.Id == id)
+                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<TEntity>> GetByIds(IEnumerable<int> ids)
+        {
+            return await _context.Set<TEntity>()
+                 .Where(x => ids.Contains(x.Id))
+                 .ToListAsync();
+        }
+
         public async Task<bool> Delete(int id)
         {
             var entity = await _context.Set<TEntity>().FindAsync(id);
@@ -53,6 +68,11 @@ namespace InClassApp.Repositories.Base
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        public void Save()
+        {
+            _context.SaveChangesAsync();
         }
     }
 }

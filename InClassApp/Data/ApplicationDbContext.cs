@@ -1,10 +1,6 @@
-﻿using InClassApp.Models;
-using InClassApp.Models.Entities;
+﻿using InClassApp.Models.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace InClassApp.Data
 {
@@ -19,6 +15,7 @@ namespace InClassApp.Data
         public DbSet<Group> Groups { get; set; }
         public DbSet<Meeting> Meetings { get; set; }
         public DbSet<PresenceRecord> PresenceRecords { get; set; }
-        public DbSet<InClassApp.Models.Entities.Student> Student { get; set; }
+        public DbSet<Student> Student { get; set; }
+        public DbSet<Lecturer> Lecturer { get; set; }
     }
 }

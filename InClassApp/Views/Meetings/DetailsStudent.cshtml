@@ -1,0 +1,87 @@
+﻿@model InClassApp.Models.Entities.Meeting
+
+@{
+    ViewData["Title"] = "DetailsStudent";
+}
+
+<h1>Meeting details</h1>
+
+<div>
+    <h4>Meeting</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MeetingStartDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MeetingStartDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MeetingEndDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MeetingEndDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Group)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Group.Name)
+        </dd>
+        <dt class="col-sm-2">
+            <span>My attendance status</span>
+        </dt>
+        <dd class="col-sm-10">
+            @(ViewBag.CurrentUserStatus ? "Present" : "Absent")
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-controller="Groups" asp-action="Details" asp-route-id="@Model.GroupId">Back</a>
+</div>
+
+<div class="modal fade" id="inputCodeModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Provie code given by lecturer</h3>
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+            </div>
+            <div class="modal-body">
+                <h5>Code:</h5>
+                <input type="text" id="providedCode">
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                <a href="#" class="btn btn-success" onclick="CodeProvidedConfirm()">Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.IsAttendanceCheckLaunched && !ViewBag.CurrentUserStatus)
+{
+    <a href="#" class="btn btn-success" onclick="OpenCodeProvideModal()">
+        Declare attendance
+    </a>
+}
+
+@section scripts
+{
+    <script>
+        var OpenCodeProvideModal = function () {
+            $("#inputCodeModal").modal('show');
+        }
+
+        var CodeProvidedConfirm = function () {
+            let providedCode = $("#providedCode").val();
+            $.ajax({
+                type: "POST",
+                url: "../../Meetings/ValidateCode",
+                data: { meetingId: @Model.Id, providedCode: providedCode },
+                success: function () {
+                    $("#inputCodeModal").modal('hide');
+                }
+            })
+        }
+    </script>
+}

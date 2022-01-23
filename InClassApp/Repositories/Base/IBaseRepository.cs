@@ -5,8 +5,8 @@ namespace InClassApp.Repositories.Base
 {
     public interface IBaseRepository<TEntity>
     {
-        Task<int> Add(TEntity group);
-        Task<int> Update(TEntity group);
+        Task<int> Add(TEntity entity);
+        Task<int> Update(TEntity entity);
         Task<List<TEntity>> GetAll();
         Task<TEntity> GetById(int id);
         Task<TEntity> GetByIdAsNoTracking(int id);

@@ -47,5 +47,14 @@ namespace InClassApp.Repositories
                  .Where(x => x.Index == index)
                  .FirstOrDefaultAsync();
         }
+
+        public async Task<Student> GetStudentByUserId(string userId)
+        {
+            return await _context.Student
+                 .Include(x => x.User)
+                 .Include(x => x.StudentGroupRelations)
+                 .Where(x => x.UserId == userId)
+                 .FirstOrDefaultAsync();
+        }
     }
 }

@@ -10,22 +10,22 @@
     <h4>Meeting</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.MeetingStartDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.MeetingStartDate)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.MeetingEndDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.MeetingEndDate)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Group)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Group.Name)
         </dd>
     </dl>
@@ -34,3 +34,122 @@
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-controller="Groups" asp-action="Details" asp-route-id="@Model.GroupId">Back</a>
 </div>
+
+<div class="modal fade" id="checkModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Start attendance check</h3>
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+            </div>
+            <div class="modal-body">
+                <h5>Do you really want to start attendance check?</h5>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                <a href="#" class="btn btn-success" onclick="CheckRealesed()">Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.IsAttendanceCheckLaunched)
+{
+    <a href="#" class="btn btn-danger" onclick="CheckRealesed()">
+        Stop checking
+    </a>
+    <a href="#" class="btn btn-info" onclick="OpenCodeModal()">
+        Show code
+    </a>
+}
+else
+{
+    <a href="#" class="btn btn-success" onclick="OpenStartCheckModel()">
+        Start checking
+    </a>
+}
+
+<div class="modal fade" id="codeModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">View code</h3>
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+            </div>
+            <div class="modal-body">
+                <h2>@ViewBag.DecryptedCode</h2>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4 class="mt-4">Students</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Index
+            </th>
+            <th>
+                Status
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.Records)
+        {
+            <tr>
+                <td>
+                    @item.Student.User.UserName
+                </td>
+                <td>
+                    @item.Student.Index
+                </td>
+                <td>
+                    @(item.Status ? "Present" : "Absent")
+                </td>
+                <td>
+                    <a asp-controller="PresenceRecords" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-controller="PresenceRecords" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        var OpenStartCheckModel = function () {
+            $("#checkModal").modal('show');
+        }
+
+        var OpenCodeModal = function () {
+            $("#codeModal").modal('show');
+        }
+
+        var CheckRealesed = function () {
+            let shouldCheck = "@(!Model.IsAttendanceCheckLaunched)";
+            $.ajax({
+                type: "POST",
+                url: "../../Meetings/AttendanceCheck",
+                data: { meetingId: @Model.Id, checkValue: shouldCheck },
+                success: function () {
+                    $("#checkModal").modal('hide');
+                    if ("@Model.IsAttendanceCheckLaunched" === "False") {
+                        window.location = '../../Meetings/AttendanceCheck/@Model.Id';
+                    }
+                    else {
+                        window.location = '../../Meetings/Details/@Model.Id';
+                    }
+                }
+            })
+        }
+    </script>
+}

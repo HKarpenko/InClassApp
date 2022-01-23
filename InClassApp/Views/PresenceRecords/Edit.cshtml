@@ -1,0 +1,40 @@
+﻿@model InClassApp.Models.Entities.PresenceRecord
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>@Model.Student.User.UserName presence</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group form-check">
+                <h4>
+                    @Html.DisplayNameFor(model => model.Status)
+                </h4>
+                @Html.RadioButtonFor(model => model.Status, true)
+                <span>Present</span>
+                <br />
+                @Html.RadioButtonFor(model => model.Status, false)
+                <span>Absent</span>
+                <br />
+            </div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Meetings" asp-action="Details" asp-route-id="@Model.MeetingId">Back to meeting</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

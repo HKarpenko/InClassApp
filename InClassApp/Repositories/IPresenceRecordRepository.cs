@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace InClassApp.Repositories
 {
-    interface IPresenceRecordRepository : IBaseRepository<PresenceRecordRepository>
+    public interface IPresenceRecordRepository : IBaseRepository<PresenceRecord>
     {
+        Task<List<PresenceRecord>> GetPresenceRecordsByMeetingId(int meetingId);
     }
 }

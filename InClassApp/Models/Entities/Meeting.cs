@@ -15,6 +15,12 @@ namespace InClassApp.Models.Entities
 
         public Group Group { get; set; }
 
+        public bool IsAttendanceCheckLaunched { get; set; }
+
+        public string LastlyGeneratedCheckCode { get; set; }
+
+        public string LastlyGeneratedCodeIV { get; set; }
+
         public ICollection<PresenceRecord> PresenceRecords { get; set; }
     }
 }

@@ -5,6 +5,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using InClassApp.Models.Entities;
 using InClassApp.Repositories;
+using Microsoft.AspNetCore.Identity;
+using System;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InClassApp.Controllers
 {
@@ -15,22 +19,50 @@ namespace InClassApp.Controllers
         private readonly ILecturersRepository _lecturersRepository;
         private readonly IMeetingRepository _meetingRepository;
         private readonly IStudentRepository _studentRepository;
+        private readonly IPresenceRecordRepository _presenceRecordRepository;
+        private readonly UserManager<AppUser> _userManager;
 
         public GroupsController(ISubjectRepository subjectRepository, IGroupRepository groupRepository,
-            ILecturersRepository lecturersRepository, IMeetingRepository meetingRepository, IStudentRepository studentRepository)
+            ILecturersRepository lecturersRepository, IMeetingRepository meetingRepository, IStudentRepository studentRepository,
+            IPresenceRecordRepository presenceRecordRepository, IServiceProvider serviceProvider)
         {
             _subjectRepository = subjectRepository;
             _groupRepository = groupRepository;
             _lecturersRepository = lecturersRepository;
             _meetingRepository = meetingRepository;
             _studentRepository = studentRepository;
+            _presenceRecordRepository = presenceRecordRepository;
+            _userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
         }
 
         // GET: Groups
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _groupRepository.GetAll();
-            return View(await applicationDbContext);
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            var currentUserRoles = currentUser != null ? await _userManager.GetRolesAsync(currentUser) : null;
+            if (currentUser == null || currentUserRoles == null)
+            {
+                return Unauthorized();
+            }
+
+            var groups = await _groupRepository.GetAll();
+            if (currentUserRoles.Any(x => x == "Admin")) 
+            {
+                return View(groups);
+            }
+
+            if (currentUserRoles.Any(x => x == "Lecturer"))
+            {
+                var currentLecturer = await _lecturersRepository.GetLecturerByUserId(currentUser.Id);
+                groups = groups.Where(x => x.LecturerId == currentLecturer.Id).ToList();
+            }
+            else if (currentUserRoles.Any(x => x == "Student"))
+            {
+                var currentStudent = await _studentRepository.GetStudentByUserId(currentUser.Id);
+                groups = groups.Where(x => x.StudentGroupRelations.Any(r => r.StudentId == currentStudent.Id)).ToList();
+            }
+
+            return View(groups);
         }
 
         // GET: Groups/Details/5
@@ -39,6 +71,11 @@ namespace InClassApp.Controllers
             if (id == null)
             {
                 return NotFound();
+            }
+
+            if (!(await IsCurrentUserHaveRightsToReadGroup((int)id)))
+            {
+                return Unauthorized();
             }
 
             var @group = await _groupRepository.GetById((int)id);
@@ -52,6 +89,7 @@ namespace InClassApp.Controllers
         }
 
         // GET: Groups/Create
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
             var subjects = await _subjectRepository.GetAll();
@@ -66,6 +104,7 @@ namespace InClassApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,StudiesSemestr,SubjectId,LecturerId,StartDate,EndDate,Id")] Group @group)
         {
@@ -89,6 +128,11 @@ namespace InClassApp.Controllers
             if (id == null)
             {
                 return NotFound();
+            }
+
+            if ( !(await IsCurrentUserHaveRightsToEditGroup((int)id)) )
+            {
+                return Unauthorized();
             }
 
             var @group = await _groupRepository.GetById((int)id);
@@ -115,6 +159,11 @@ namespace InClassApp.Controllers
             if (id != @group.Id)
             {
                 return NotFound();
+            }
+
+            if (!(await IsCurrentUserHaveRightsToEditGroup(id)))
+            {
+                return Unauthorized();
             }
 
             if (ModelState.IsValid)
@@ -146,6 +195,7 @@ namespace InClassApp.Controllers
         }
 
         // GET: Groups/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -164,6 +214,7 @@ namespace InClassApp.Controllers
 
         // POST: Groups/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -179,6 +230,11 @@ namespace InClassApp.Controllers
                 return NotFound();
             }
 
+            if (!(await IsCurrentUserHaveRightsToEditGroup((int)id)))
+            {
+                return Unauthorized();
+            }
+
             ViewData["GroupId"] = id;
             var group = await _groupRepository.GetById((int)id);
             return View(group.StudentGroupRelations.Select(x => x.Student));
@@ -192,6 +248,11 @@ namespace InClassApp.Controllers
             if (groupId == null)
             {
                 return NotFound();
+            }
+
+            if (!(await IsCurrentUserHaveRightsToEditGroup((int)groupId)))
+            {
+                return Unauthorized();
             }
 
             var addedStudents = (await _groupRepository.GetById((int)groupId)).StudentGroupRelations.Select(r => r.Student);
@@ -215,6 +276,11 @@ namespace InClassApp.Controllers
                 return NotFound();
             }
 
+            if (!(await IsCurrentUserHaveRightsToEditGroup((int)groupId)))
+            {
+                return Unauthorized();
+            }
+
             if (ModelState.IsValid)
             {
                 var student = await _studentRepository.GetStudentByIndex(index);
@@ -223,7 +289,14 @@ namespace InClassApp.Controllers
 
                 foreach(var meeting in group.Meetings)
                 {
+                    var presenceRecord = new PresenceRecord
+                    {
+                        MeetingId = meeting.Id,
+                        StudentId = student.Id,
+                        Status = false
+                    };
 
+                    await _presenceRecordRepository.Add(presenceRecord);
                 }
 
                 return RedirectToAction("StudentsList", "Groups", new { id = groupId });
@@ -242,6 +315,11 @@ namespace InClassApp.Controllers
             if (groupId == null || studentId == null)
             {
                 return NotFound();
+            }
+
+            if (!(await IsCurrentUserHaveRightsToEditGroup((int)groupId)))
+            {
+                return Unauthorized();
             }
 
             var student = await _studentRepository.GetById((int)studentId);
@@ -264,6 +342,20 @@ namespace InClassApp.Controllers
                 return NotFound();
             }
 
+            if (!(await IsCurrentUserHaveRightsToEditGroup((int)groupId)))
+            {
+                return Unauthorized();
+            }
+
+            var presenceRecordIdsToDelete = (await _presenceRecordRepository.GetAll())
+                .Where(x => x.Meeting.GroupId == groupId)
+                .Select(x => x.Id);
+
+            foreach(var idToDelete in presenceRecordIdsToDelete)
+            {
+                await _presenceRecordRepository.Delete(idToDelete);
+            }
+
             await _groupRepository.DeleteStudentGroupRelation((int)studentId, (int)groupId);
             return RedirectToAction("StudentsList", "Groups", new { id = groupId });
         }
@@ -272,6 +364,57 @@ namespace InClassApp.Controllers
         {
             var groups = await _groupRepository.GetAll();
             return groups.Any(e => e.Id == id);
+        }
+
+        private async Task<bool> IsCurrentUserHaveRightsToReadGroup(int groupId)
+        {
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            var currentUserRoles = currentUser != null ? await _userManager.GetRolesAsync(currentUser) : null;
+
+            if (currentUser == null || currentUserRoles == null || currentUserRoles.Count == 0)
+            {
+                return false;
+            }
+
+            if (currentUserRoles.Any(x => x == "Admin"))
+            {
+                return true;
+            }
+
+            if (currentUserRoles.Any(x => x == "Lecturer") == true)
+            {
+                var currentLecturer = await _lecturersRepository.GetLecturerByUserId(currentUser.Id);
+                return currentLecturer.Groups.Any(r => r.Id == groupId);
+            }
+            else
+            {
+                var currentStudent = await _studentRepository.GetStudentByUserId(currentUser.Id);
+
+                return currentStudent.StudentGroupRelations.Any(r => r.GroupId == groupId);
+            }
+        }
+
+        private async Task<bool> IsCurrentUserHaveRightsToEditGroup(int groupId)
+        {
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            var currentUserRoles = currentUser != null ? await _userManager.GetRolesAsync(currentUser) : null;
+
+            if (currentUser == null || currentUserRoles == null || currentUserRoles.Count == 0)
+            {
+                return false;
+            }
+
+            if (currentUserRoles.Any(x => x == "Admin"))
+            {
+                return true;
+            }
+
+            if (currentUserRoles.Any(x => x == "Lecturer") == true)
+            {
+                var currentLecturer = await _lecturersRepository.GetLecturerByUserId(currentUser.Id);
+                return currentLecturer.Groups.Any(r => r.Id == groupId);
+            }
+            return false;
         }
     }
 }

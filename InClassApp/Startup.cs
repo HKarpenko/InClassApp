@@ -1,12 +1,17 @@
 using InClassApp.Data;
+using InClassApp.Helpers;
+using InClassApp.Helpers.Interfaces;
 using InClassApp.Models.Entities;
 using InClassApp.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Threading.Tasks;
 
 namespace InClassApp
 {
@@ -27,20 +32,25 @@ namespace InClassApp
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddScoped<IAttendanceCodeManager, AttendanceCodeManager>();
+
 
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<ISubjectRepository, SubjectRepository>();
             services.AddScoped<ILecturersRepository, LecturersRepository>();
             services.AddScoped<IMeetingRepository, MeetingRepository>();
             services.AddScoped<IStudentRepository, StudentRepository>();
+            services.AddScoped<IPresenceRecordRepository, PresenceRecordRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider provider)
         {
             if (env.IsDevelopment())
             {
@@ -68,6 +78,47 @@ namespace InClassApp
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+            CreateRoles(provider).Wait();
+        }
+
+        public async Task<IdentityResult> CreateRoles(IServiceProvider serviceProvider)
+        {
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var UserManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+            string[] roleNames = { "Admin", "Lecturer", "Student" };
+
+            foreach (var roleName in roleNames)
+            {
+                var roleExist = await RoleManager.RoleExistsAsync(roleName);
+                if (!roleExist)
+                {
+                    await RoleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
+
+            //Here you could create a super user who will maintain the web app
+            var powerUser = new AppUser
+            {
+                UserName = Configuration["AdminUserSettings:UserName"],
+                Email = Configuration["AdminUserSettings:UserEmail"],
+            };
+            //Ensure you have these values in your appsettings.json file
+            string powerUserPassword = Configuration["AdminUserSettings:UserPassword"];
+
+            var _user = await UserManager.FindByEmailAsync(Configuration["AdminUserSettings:UserEmail"]);
+            if (_user == null)
+            {
+                var createPowerUser = await UserManager.CreateAsync(powerUser, powerUserPassword);
+                if (createPowerUser.Succeeded)
+                {
+                    //here we tie the new user to the role
+                    await UserManager.AddToRoleAsync(powerUser, "Admin");
+
+                }
+            }
+
+            return IdentityResult.Success;
         }
     }
 }

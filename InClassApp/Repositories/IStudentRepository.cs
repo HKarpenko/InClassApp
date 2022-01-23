@@ -9,6 +9,8 @@ namespace InClassApp.Repositories
     {
         Task<Student> GetStudentByIndex(string index);
 
+        Task<Student> GetStudentByUserId(string userId);
+
         new Task<List<Student>> GetByIds(IEnumerable<int> ids);
     }
 }

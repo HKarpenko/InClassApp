@@ -1,0 +1,65 @@
+﻿@model InClassApp.Models.Entities.Meeting
+
+@{
+    ViewData["Title"] = "StartTimer";
+}
+
+@section styles{ 
+    <style>
+        .center {
+            margin: auto;
+            padding: 70px 0;
+            text-align: center;
+        }
+
+        .code-text {
+            font-size: 6rem;
+        }
+
+        .bordered {
+            border: 3px solid;
+        }
+    </style>
+}
+
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col-8">
+        <div class="center bordered">
+            <span id="code-text" class="code-text">@ViewBag.DecryptedCode</span>
+        </div>
+        <button class="btn btn-secondary float-right mt-3" onclick="copyText()">Copy</button>
+    </div>
+    <div class="col-2"></div>
+</div>
+<div class="center">
+    <a href="#" class="btn btn-danger" onclick="StopCheck()">
+        Stop
+    </a>
+</div>
+
+<div>
+    <a asp-action="Details" asp-route-id="@Model.Id">Back to Details</a>
+</div>
+
+@section scripts
+{ 
+    <script>
+        function copyText() {
+            let element = document.getElementById("code-text");
+
+            navigator.clipboard.writeText(element.textContent);
+        }
+
+        function StopCheck() {
+            $.ajax({
+                type: "POST",
+                url: "../../Meetings/AttendanceCheck",
+                data: { meetingId: @Model.Id, checkValue: false },
+                success: function () {
+                    window.location = '../../Meetings/Details/@Model.Id';
+                }
+            })
+        }
+    </script>
+}

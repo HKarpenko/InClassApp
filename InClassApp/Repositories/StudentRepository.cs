@@ -51,7 +51,6 @@ namespace InClassApp.Repositories
         public async Task<Student> GetStudentByUserId(string userId)
         {
             return await _context.Student
-                 .Include(x => x.User)
                  .Include(x => x.StudentGroupRelations)
                  .Where(x => x.UserId == userId)
                  .FirstOrDefaultAsync();

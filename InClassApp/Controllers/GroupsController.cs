@@ -9,9 +9,11 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authorization;
+using InClassApp.Models.Dtos;
 
 namespace InClassApp.Controllers
 {
+    [Authorize]
     public class GroupsController : Controller
     {
         private readonly ISubjectRepository _subjectRepository;
@@ -48,18 +50,23 @@ namespace InClassApp.Controllers
             var groups = await _groupRepository.GetAll();
             if (currentUserRoles.Any(x => x == "Admin")) 
             {
+                ViewData["CurrentRole"] = "Admin";
                 return View(groups);
             }
 
             if (currentUserRoles.Any(x => x == "Lecturer"))
             {
                 var currentLecturer = await _lecturersRepository.GetLecturerByUserId(currentUser.Id);
-                groups = groups.Where(x => x.LecturerId == currentLecturer.Id).ToList();
+                groups = groups.Where(x => x.LecturerGroupRelations.Any(r => r.LecturerId == currentLecturer.Id)).ToList();
+
+                ViewData["CurrentRole"] = "Lecturer";
             }
             else if (currentUserRoles.Any(x => x == "Student"))
             {
                 var currentStudent = await _studentRepository.GetStudentByUserId(currentUser.Id);
                 groups = groups.Where(x => x.StudentGroupRelations.Any(r => r.StudentId == currentStudent.Id)).ToList();
+
+                ViewData["CurrentRole"] = "Student";
             }
 
             return View(groups);
@@ -77,6 +84,14 @@ namespace InClassApp.Controllers
             {
                 return Unauthorized();
             }
+            if (await IsCurrentUserHaveRightsToEditGroup((int)id))
+            {
+                ViewData["Rights"] = "Edit";
+            }
+            else
+            {
+                ViewData["Rights"] = "Read";
+            }
 
             var @group = await _groupRepository.GetById((int)id);
             if (@group == null)
@@ -92,11 +107,8 @@ namespace InClassApp.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
-            var subjects = await _subjectRepository.GetAll();
-            var lecturers = await _lecturersRepository.GetAll();
-
-            ViewData["SubjectId"] = new SelectList(subjects, "Id", "Id");
-            ViewData["LecturerId"] = new SelectList(lecturers, "Id", "Id");
+            ViewData["Subjects"] = await _subjectRepository.GetAll();
+            ViewData["Lecturers"] = await _lecturersRepository.GetAll();
             return View();
         }
 
@@ -106,23 +118,35 @@ namespace InClassApp.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,StudiesSemestr,SubjectId,LecturerId,StartDate,EndDate,Id")] Group @group)
+        public async Task<IActionResult> Create([Bind("Name, StudiesSemestr, SubjectId, LecturersIds, StartDate, EndDate")] SaveGroupDto groupDto)
         {
             if (ModelState.IsValid)
             {
-                await _groupRepository.Add(@group);
-                return RedirectToAction(nameof(Index));
+                Group newGroup = new Group
+                {
+                    Name = groupDto.Name,
+                    StartDate = groupDto.StartDate,
+                    EndDate = groupDto.EndDate,
+                    StudiesSemestr = groupDto.StudiesSemestr,
+                    SubjectId = groupDto.SubjectId
+                };
+                await _groupRepository.Add(newGroup);
+
+                foreach (var lecturerId in groupDto.LecturersIds)
+                {
+                    await _groupRepository.AddLecturerGroupRelation(lecturerId, newGroup.Id);
+                }
+                return RedirectToAction("Index");
             }
 
-            var subjects = await _subjectRepository.GetAll();
-            var lecturers = await _lecturersRepository.GetAll();
 
-            ViewData["SubjectId"] = new SelectList(subjects, "Id", "Id", @group.SubjectId);
-            ViewData["LecturerId"] = new SelectList(lecturers, "Id", "Id", @group.LecturerId);
-            return View(@group);
+            ViewData["Subjects"] = await _subjectRepository.GetAll();
+            ViewData["Lecturers"] = await _lecturersRepository.GetAll();
+            return View();
         }
 
         // GET: Groups/Edit/5
+        [Authorize(Roles = "Admin, Lecturer")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -140,23 +164,31 @@ namespace InClassApp.Controllers
             {
                 return NotFound();
             }
+            SaveGroupDto groupDto = new SaveGroupDto
+            {
+                Id = group.Id,
+                Name = group.Name,
+                StudiesSemestr = group.StudiesSemestr,
+                StartDate = group.StartDate,
+                EndDate = group.EndDate,
+                SubjectId = group.SubjectId,
+                LecturersIds = group.LecturerGroupRelations.Select(x => x.LecturerId).ToList()
+            };
 
-            var subjects = await _subjectRepository.GetAll();
-            var lecturers = await _lecturersRepository.GetAll();
-
-            ViewData["SubjectId"] = new SelectList(subjects, "Id", "Id", @group.SubjectId);
-            ViewData["LecturerId"] = new SelectList(lecturers, "Id", "Id", @group.LecturerId);
-            return View(@group);
+            ViewData["Subjects"] = await _subjectRepository.GetAll();
+            ViewData["Lecturers"] = await _lecturersRepository.GetAll();
+            return View(groupDto);
         }
 
         // POST: Groups/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Admin, Lecturer")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,StudiesSemestr,SubjectId,LecturerId,StartDate,EndDate,Id")] Group @group)
+        public async Task<IActionResult> Edit(int id, [Bind("Id, Name, StudiesSemestr, SubjectId, LecturersIds, StartDate, EndDate")] SaveGroupDto groupDto)
         {
-            if (id != @group.Id)
+            if (id != groupDto.Id)
             {
                 return NotFound();
             }
@@ -170,11 +202,25 @@ namespace InClassApp.Controllers
             {
                 try
                 {
-                    await _groupRepository.Update(@group);
+                    var group = await _groupRepository.GetById(id);
+                    group.Name = group.Name;
+                    group.StudiesSemestr = group.StudiesSemestr;
+                    group.StartDate = group.StartDate;
+                    group.EndDate = group.EndDate;
+                    group.SubjectId = group.SubjectId;
+                    if(groupDto.LecturersIds != null)
+                    {
+                        foreach (var lecturerId in groupDto.LecturersIds)
+                        {
+                            await _groupRepository.AddLecturerGroupRelation(lecturerId, group.Id);
+                        }
+                    }
+
+                    await _groupRepository.Update(group);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!(await GroupExists(@group.Id)))
+                    if (!(await GroupExists(groupDto.Id)))
                     {
                         return NotFound();
                     }
@@ -186,12 +232,9 @@ namespace InClassApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var subjects = await _subjectRepository.GetAll();
-            var lecturers = await _lecturersRepository.GetAll();
-
-            ViewData["SubjectId"] = new SelectList(subjects, "Id", "Id", @group.SubjectId);
-            ViewData["LecturerId"] = new SelectList(lecturers, "Id", "Id", @group.LecturerId);
-            return View(@group);
+            ViewData["Subjects"] = await _subjectRepository.GetAll();
+            ViewData["Lecturers"] = await _lecturersRepository.GetAll();
+            return View(groupDto);
         }
 
         // GET: Groups/Delete/5
@@ -218,11 +261,19 @@ namespace InClassApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var group = await _groupRepository.GetById(id);
+            foreach(var relation in group.LecturerGroupRelations)
+            {
+                await _groupRepository.DeleteLecturerGroupRelation((int)relation.LecturerId, (int)relation.GroupId);
+            }
+
             await _groupRepository.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Groups/List/2
+        // GET: Groups/StudentsList/2
+        [HttpGet]
+        [Authorize(Roles = "Admin, Lecturer")]
         public async Task<IActionResult> StudentsList(int? id)
         {
             if (id == null)
@@ -241,6 +292,7 @@ namespace InClassApp.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, Lecturer")]
         [Route("Groups/AddStudent/{groupId:int?}")]
         // GET: Groups/AddStudent/3
         public async Task<IActionResult> AddStudent(int? groupId)
@@ -310,6 +362,8 @@ namespace InClassApp.Controllers
         }
 
         // GET: Groups/RemoveStudent?groupId=3&&studentId=1
+        [HttpGet]
+        [Authorize(Roles = "Admin, Lecturer")]
         public async Task<IActionResult> RemoveStudent(int? groupId, int? studentId)
         {
             if (groupId == null || studentId == null)
@@ -334,6 +388,7 @@ namespace InClassApp.Controllers
 
         // POST: Groups/RemoveStudent?groupId=3&&studentId=1
         [HttpPost, ActionName("RemoveStudent")]
+        [Authorize(Roles = "Admin, Lecturer")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveStudentConfirmed(int? groupId, int? studentId)
         {
@@ -384,7 +439,7 @@ namespace InClassApp.Controllers
             if (currentUserRoles.Any(x => x == "Lecturer") == true)
             {
                 var currentLecturer = await _lecturersRepository.GetLecturerByUserId(currentUser.Id);
-                return currentLecturer.Groups.Any(r => r.Id == groupId);
+                return currentLecturer.LecturerGroupRelations.Any(r => r.GroupId == groupId);
             }
             else
             {
@@ -412,7 +467,7 @@ namespace InClassApp.Controllers
             if (currentUserRoles.Any(x => x == "Lecturer") == true)
             {
                 var currentLecturer = await _lecturersRepository.GetLecturerByUserId(currentUser.Id);
-                return currentLecturer.Groups.Any(r => r.Id == groupId);
+                return currentLecturer.LecturerGroupRelations.Any(r => r.GroupId == groupId);
             }
             return false;
         }

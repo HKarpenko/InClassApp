@@ -21,8 +21,9 @@ namespace InClassApp.Repositories
         {
             return await _context.Groups
                 .Include(x => x.Subject)
-                .Include(x => x.Lecturer)
-                    .ThenInclude(l => l.User)
+                .Include(x => x.LecturerGroupRelations)
+                    .ThenInclude(r => r.Lecturer)
+                        .ThenInclude(l => l.User)
                 .Include(x => x.StudentGroupRelations)
                     .ThenInclude(r => r.Student)
                         .ThenInclude(s => s.User)
@@ -34,8 +35,9 @@ namespace InClassApp.Repositories
             return await _context.Groups
                  .Include(x => x.Subject)
                  .Include(x => x.Meetings)
-                 .Include(x => x.Lecturer)
-                    .ThenInclude(l => l.User)
+                 .Include(x => x.LecturerGroupRelations)
+                    .ThenInclude(r => r.Lecturer)
+                        .ThenInclude(l => l.User)
                  .Include(x => x.StudentGroupRelations)
                     .ThenInclude(r => r.Student)
                         .ThenInclude(s => s.User)
@@ -47,8 +49,9 @@ namespace InClassApp.Repositories
         {
             return await _context.Groups
                  .Include(x => x.Subject)
-                 .Include(x => x.Lecturer)
-                    .ThenInclude(l => l.User)
+                 .Include(x => x.LecturerGroupRelations)
+                    .ThenInclude(r => r.Lecturer)
+                        .ThenInclude(l => l.User)
                  .Include(x => x.StudentGroupRelations)
                     .ThenInclude(r => r.Student)
                         .ThenInclude(s => s.User)
@@ -79,6 +82,40 @@ namespace InClassApp.Repositories
             }
 
             _context.Set<StudentGroupRelation>().Remove(relation);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<int> AddLecturerGroupRelation(int lecturerId, int groupId)
+        {
+            var currentRelation = (await GetById(groupId)).LecturerGroupRelations.FirstOrDefault(x => x.LecturerId == lecturerId);
+            if (currentRelation != null)
+            {
+                return currentRelation.Id;
+            }
+
+            var relation = new LecturerGroupRelation
+            {
+                LecturerId = lecturerId,
+                GroupId = groupId
+            };
+            _context.Set<LecturerGroupRelation>().Add(relation);
+            await _context.SaveChangesAsync();
+
+            return relation.Id;
+        }
+
+        public async Task<bool> DeleteLecturerGroupRelation(int lecturerId, int groupId)
+        {
+            var group = await GetById(groupId);
+            var relation = group.LecturerGroupRelations.FirstOrDefault(r => r.LecturerId == lecturerId);
+            if (relation == null)
+            {
+                return false;
+            }
+
+            _context.Set<LecturerGroupRelation>().Remove(relation);
             await _context.SaveChangesAsync();
 
             return true;

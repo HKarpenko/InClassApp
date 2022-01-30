@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace InClassApp.Controllers
 {
+    [Authorize]
     public class MeetingsController : Controller
     {
         private readonly IMeetingRepository _meetingRepository;

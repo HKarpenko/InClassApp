@@ -12,5 +12,9 @@ namespace InClassApp.Repositories
         Task<int> AddStudentGroupRelation(int studentId, int groupId);
 
         Task<bool> DeleteStudentGroupRelation(int studentId, int groupId);
+
+        Task<int> AddLecturerGroupRelation(int lecturerId, int groupId);
+
+        Task<bool> DeleteLecturerGroupRelation(int lecturerId, int groupId);
     }
 }

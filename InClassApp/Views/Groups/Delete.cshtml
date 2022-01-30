@@ -30,10 +30,13 @@
             @Html.DisplayFor(model => model.Subject.Id)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Lecturer)
+            Lecturers
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Lecturer.Id)
+            @foreach (var relation in Model.LecturerGroupRelations)
+            {
+                <span>@relation.Lecturer.User.UserName</span>
+            }
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.StartDate)

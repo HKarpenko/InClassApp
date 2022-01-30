@@ -13,5 +13,6 @@ namespace InClassApp.Models.Entities
         public string Index { get; set; }
 
         public ICollection<StudentGroupRelation> StudentGroupRelations { get; set; }
+
     }
 }

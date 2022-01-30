@@ -6,9 +6,12 @@
 
 <h1>Groups</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@if (ViewBag.CurrentRole == "Admin")
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
 <table class="table">
     <thead>
         <tr>
@@ -22,7 +25,7 @@
                 @Html.DisplayNameFor(model => model.Subject)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Lecturer)
+                Lecturers
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.StartDate)
@@ -34,32 +37,51 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StudiesSemestr)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Subject.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Lecturer.User.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StudiesSemestr)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject.Name)
+                </td>
+                <td>
+                    <dd class="col-sm-10">
+                        @foreach (var relation in item.LecturerGroupRelations)
+                        {
+                            <div>@relation.Lecturer.User.UserName</div>
+                        }
+                    </dd>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    @if (ViewBag.CurrentRole == "Admin")
+                    {
+                        <span>
+                            |
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </span>
+                    }
+                    else if (ViewBag.CurrentRole == "Lecturer")
+                    {
+                        <span>
+                            |
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        </span>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

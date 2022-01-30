@@ -1,7 +1,13 @@
-﻿@model InClassApp.Models.Entities.Group
+﻿@model InClassApp.Models.Dtos.SaveGroupDto
+@using InClassApp.Models.Entities
 
 @{
     ViewData["Title"] = "Edit";
+}
+
+@{
+    IEnumerable<Lecturer> allLecturers = ViewBag.Lecturers;
+    IEnumerable<Subject> allSubjects = ViewBag.Subjects;
 }
 
 <h1>Edit</h1>
@@ -24,13 +30,15 @@
             </div>
             <div class="form-group">
                 <label asp-for="SubjectId" class="control-label"></label>
-                <select asp-for="SubjectId" class="form-control" asp-items="ViewBag.SubjectId"></select>
-                <span asp-validation-for="SubjectId" class="text-danger"></span>
+                @Html.DropDownListFor(m => m.SubjectId, allSubjects.Select(x =>
+                    new SelectListItem { Text = x.Name, Value = x.Id.ToString() }),
+                    new { @class = "form-control chosen-select" })
             </div>
             <div class="form-group">
-                <label asp-for="LecturerId" class="control-label"></label>
-                <select asp-for="LecturerId" class="form-control" asp-items="ViewBag.LecturerId"></select>
-                <span asp-validation-for="LecturerId" class="text-danger"></span>
+                <label asp-for="LecturersIds" class="control-label">Lecturers</label>
+                @Html.DropDownListFor(m => m.LecturersIds, allLecturers.Select(x =>
+                    new SelectListItem { Text = x.User.UserName, Value = x.Id.ToString() }),
+                    new { @class = "form-control chosen-select", @multiple = true })
             </div>
             <div class="form-group">
                 <label asp-for="StartDate" class="control-label"></label>
@@ -56,4 +64,8 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="//cdn.jsdelivr.net/chosen/1.1.0/chosen.jquery.js"></script>
+    <script>
+        $('.chosen-select').chosen();
+    </script>
 }

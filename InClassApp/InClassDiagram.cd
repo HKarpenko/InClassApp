@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="InClassApp.Models.Entities.AppUser" Collapsed="true">
+    <Position X="4.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Entities\AppUser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InClassApp.Models.Entities.Student" Collapsed="true">
+    <Position X="0.5" Y="1" Width="1.5" />
+    <AssociationLine Name="User" Type="InClassApp.Models.Entities.AppUser" ManuallyRouted="true">
+      <Path>
+        <Point X="2" Y="1.346" />
+        <Point X="3.375" Y="1.346" />
+        <Point X="3.375" Y="1.346" />
+        <Point X="4.75" Y="1.346" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAFAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Models\Entities\Student.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="User" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="InClassApp.Models.Entities.Lecturer" Collapsed="true">
+    <Position X="8" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAQAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Entities\Lecturer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="User" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="InClassApp.Models.Entities.Subject" Collapsed="true">
+    <Position X="4.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAgAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Entities\Subject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InClassApp.Models.Entities.Group" Collapsed="true">
+    <Position X="4.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAEAAAAEQAAAAAAAIAAAAQgAAAAAAAAAAAAIEAAAAA=</HashCode>
+      <FileName>Models\Entities\Group.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Subject" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="InClassApp.Models.Entities.StudentGroupRelation" Collapsed="true">
+    <Position X="2" Y="3.5" Width="2" />
+    <AssociationLine Name="Student" Type="InClassApp.Models.Entities.Student">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.009" Y="-0.276" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAEAEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>Models\Entities\StudentGroupRelation.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Student" />
+      <Property Name="Group" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="InClassApp.Models.Entities.LecturerGroupRelation" Collapsed="true">
+    <Position X="7.75" Y="3.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAGAEAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Entities\LecturerGroupRelation.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Group" />
+      <Property Name="Lecturer" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="InClassApp.Models.Entities.Meeting" Collapsed="true">
+    <Position X="4.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAEAAiAABAAAAAAAAQAIAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Entities\Meeting.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Group" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="InClassApp.Models.Entities.PresenceRecord" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAQACAAg=</HashCode>
+      <FileName>Models\Entities\PresenceRecord.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Meeting" />
+      <Property Name="Student" />
+    </ShowAsAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

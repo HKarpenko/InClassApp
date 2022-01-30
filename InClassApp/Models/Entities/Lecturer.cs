@@ -13,6 +13,6 @@ namespace InClassApp.Models.Entities
 
         public AppUser User { get; set; }
 
-        public ICollection<Group> Groups { get; set; }
+        public ICollection<LecturerGroupRelation> LecturerGroupRelations { get; set; }
     }
 }

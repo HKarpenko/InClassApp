@@ -44,7 +44,7 @@
                     Subject
                 </th>
                 <th>
-                    Lecturer
+                    Lecturers
                 </th>
                 <th>
                     StartDate
@@ -69,7 +69,10 @@
                     @item.Subject.Name
                 </td>
                 <td>
-                    @item.Lecturer.User.UserName
+                    @foreach (var relation in item.LecturerGroupRelations)
+                    {
+                        <div>@relation.Lecturer.User.UserName</div>
+                    }
                 </td>
                 <td>
                     @item.StartDate

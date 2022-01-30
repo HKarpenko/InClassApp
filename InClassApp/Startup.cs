@@ -31,7 +31,12 @@ namespace InClassApp
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<AppUser>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.Password.RequiredLength = 8;
+                    options.User.RequireUniqueEmail = true;
+                })
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -47,6 +52,7 @@ namespace InClassApp
             services.AddScoped<IMeetingRepository, MeetingRepository>();
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<IPresenceRecordRepository, PresenceRecordRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -20,16 +20,18 @@ namespace InClassApp.Controllers
         private readonly IGroupRepository _groupRepository;
         private readonly IPresenceRecordRepository _presenceRecordRepository;
         private readonly IAttendanceCodeManager _attendanceCodeManager;
+        private readonly IStudentRepository _studentRepository;
         private readonly UserManager<AppUser> _userManager;
 
         public MeetingsController(IMeetingRepository meetingRepository, IGroupRepository groupRepository,
             IPresenceRecordRepository presenceRecordRepository, IAttendanceCodeManager attendanceCodeManager,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider, IStudentRepository studentRepository)
         {
             _meetingRepository = meetingRepository;
             _groupRepository = groupRepository;
             _presenceRecordRepository = presenceRecordRepository;
             _attendanceCodeManager = attendanceCodeManager;
+            _studentRepository = studentRepository;
             _userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
         }
 
@@ -69,7 +71,10 @@ namespace InClassApp.Controllers
                 return NotFound();
             }
 
-            ViewData["CurrentUserStatus"] = false;
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var currentStudentId = (await _studentRepository.GetStudentByUserId(user.Id)).Id;
+
+            ViewData["CurrentUserStatus"] = meeting.PresenceRecords.FirstOrDefault(x => x.StudentId == currentStudentId).Status;
             return View(meeting);
         }
 
@@ -82,7 +87,7 @@ namespace InClassApp.Controllers
             var decryptedCode = _attendanceCodeManager.GetDecryptedCode(meeting.LastlyGeneratedCheckCode, meeting.LastlyGeneratedCodeIV);
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var currentStudentId = 1;
+            var currentStudentId = (await _studentRepository.GetStudentByUserId(user.Id)).Id;
             if (decryptedCode.Equals(providedCode) && meeting.IsAttendanceCheckLaunched)
             {
                 var presenceRecordToUpdate = meeting.PresenceRecords?.FirstOrDefault(x => x.StudentId == currentStudentId);
@@ -92,6 +97,10 @@ namespace InClassApp.Controllers
                 }
                 presenceRecordToUpdate.Status = true;
                 await _presenceRecordRepository.Update(presenceRecordToUpdate);
+            }
+            if (!decryptedCode.Equals(providedCode))
+            {
+                return false;
             }
 
             return true;

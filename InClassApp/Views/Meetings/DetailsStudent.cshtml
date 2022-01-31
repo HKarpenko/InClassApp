@@ -44,7 +44,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Provie code given by lecturer</h3>
+                <h3 class="modal-title">Provide code given by lecturer</h3>
                 <a href="#" class="close" data-dismiss="modal">&times;</a>
             </div>
             <div class="modal-body">
@@ -78,8 +78,14 @@
                 type: "POST",
                 url: "../../Meetings/ValidateCode",
                 data: { meetingId: @Model.Id, providedCode: providedCode },
-                success: function () {
-                    $("#inputCodeModal").modal('hide');
+                success: function (result) {
+                    if (result) {
+                        $("#inputCodeModal").modal('hide');
+                        location.reload(true);
+                    }
+                    else {
+                        alert('Wrong code');
+                    }
                 }
             })
         }

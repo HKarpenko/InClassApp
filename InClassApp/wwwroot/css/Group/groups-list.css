@@ -1,0 +1,20 @@
+﻿.groups-list-header {
+    justify-content: space-evenly;
+    margin-bottom: 20px;
+}
+
+.groups-list-header-text {
+    font-size: 40px;
+    font-weight: bold;
+    float: left;
+}
+
+.groups-list-btn-add {
+    float: right;
+}
+
+.groups-list-actoins {
+    justify-content: space-between;
+    display: flex;
+    margin-left: -18px;
+}

@@ -45,7 +45,6 @@ namespace InClassApp
 
             services.AddScoped<IAttendanceCodeManager, AttendanceCodeManager>();
 
-
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<ISubjectRepository, SubjectRepository>();
             services.AddScoped<ILecturersRepository, LecturersRepository>();

@@ -10,21 +10,25 @@
     IEnumerable<Subject> subjects = ViewBag.Subjects;
 }
 
-<h1>Create</h1>
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/Group/group-create.css" />
+}
 
-<h4>Group</h4>
+<h1>Create Group</h1>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+                <label asp-for="Name" class="create-group-label control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StudiesSemestr" class="control-label"></label>
+                <label asp-for="StudiesSemestr" class="create-group-label control-label"></label>
                 <input asp-for="StudiesSemestr" class="form-control" />
                 <span asp-validation-for="StudiesSemestr" class="text-danger"></span>
             </div>
@@ -41,12 +45,12 @@
                     new { @class = "form-control chosen-select", @multiple = true })
             </div>
             <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
+                <label asp-for="StartDate" class="create-group-label control-label"></label>
                 <input asp-for="StartDate" class="form-control" />
                 <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="EndDate" class="control-label"></label>
+                <label asp-for="EndDate" class="create-group-label control-label"></label>
                 <input asp-for="EndDate" class="form-control" />
                 <span asp-validation-for="EndDate" class="text-danger"></span>
             </div>

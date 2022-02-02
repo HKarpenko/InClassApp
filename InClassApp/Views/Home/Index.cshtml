@@ -2,26 +2,19 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>Contoso University</h1>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        <h2>Welcome to Contoso University</h2>
-        <p>
-            Contoso University is a sample application that
-            demonstrates how to use Entity Framework Core in an
-            ASP.NET Core MVC web application.
-        </p>
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/Home/HomeIndex.css" />
+}
+
+<div class="welcome-header jumbotron">
+    <div class="mt-5">
+        <span class="welcome-header-text">Welcome to InClass application</span>
+        <h4 class="mt-2">InClass is an application created to help in attendance check process.</h4>
+        <h4>Please, create an account or sign in to start using application</h4>
     </div>
-    <div class="col-md-4">
-        <h2>Build it from scratch</h2>
-        <p>You can build the application by following the steps in a series of tutorials.</p>
-        <p><a class="btn btn-default" href="https://docs.asp.net/en/latest/data/ef-mvc/intro.html">See the tutorial &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Download it</h2>
-        <p>You can download the completed project from GitHub.</p>
-        <p><a class="btn btn-default" href="https://github.com/dotnet/AspNetCore.Docs/tree/main/aspnetcore/data/ef-mvc/intro/samples/5cu-final">See project source code &raquo;</a></p>
+    <div class="welcome-buttons justify-content-between">
+        <a class="btn btn-info btn-lg" asp-controller="Account" asp-action="Register">Register</a>
+        <a class="btn btn-success btn-lg" asp-controller="Account" asp-action="Login">Login</a>
     </div>
 </div>

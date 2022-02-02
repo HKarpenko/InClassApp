@@ -8,6 +8,7 @@
 @{
     IEnumerable<Lecturer> allLecturers = ViewBag.Lecturers;
     IEnumerable<Subject> allSubjects = ViewBag.Subjects;
+    string role = ViewBag.Role;
 }
 
 <h1>Edit</h1>
@@ -28,18 +29,21 @@
                 <input asp-for="StudiesSemestr" class="form-control" />
                 <span asp-validation-for="StudiesSemestr" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="SubjectId" class="control-label"></label>
-                @Html.DropDownListFor(m => m.SubjectId, allSubjects.Select(x =>
-                    new SelectListItem { Text = x.Name, Value = x.Id.ToString() }),
-                    new { @class = "form-control chosen-select" })
-            </div>
-            <div class="form-group">
-                <label asp-for="LecturersIds" class="control-label">Lecturers</label>
-                @Html.DropDownListFor(m => m.LecturersIds, allLecturers.Select(x =>
-                    new SelectListItem { Text = x.User.UserName, Value = x.Id.ToString() }),
-                    new { @class = "form-control chosen-select", @multiple = true })
-            </div>
+            @if (role == "Admin")
+            {
+                <div class="form-group">
+                    <label asp-for="SubjectId" class="control-label"></label>
+                    @Html.DropDownListFor(m => m.SubjectId, allSubjects.Select(x =>
+                        new SelectListItem { Text = x.Name, Value = x.Id.ToString() }),
+                        new { @class = "form-control chosen-select" })
+                </div>
+                <div class="form-group">
+                    <label asp-for="LecturersIds" class="control-label">Lecturers</label>
+                    @Html.DropDownListFor(m => m.LecturersIds, allLecturers.Select(x =>
+                        new SelectListItem { Text = x.User.UserName, Value = x.Id.ToString() }),
+                        new { @class = "form-control chosen-select", @multiple = true })
+                </div>
+            }
             <div class="form-group">
                 <label asp-for="StartDate" class="control-label"></label>
                 <input asp-for="StartDate" class="form-control" />

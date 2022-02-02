@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\User\**" />
+    <Content Remove="Views\User\**" />
+    <EmbeddedResource Remove="Views\User\**" />
+    <None Remove="Views\User\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Data\Migrations\20211224132341_init.cs" />
     <Compile Remove="Data\Migrations\20211224132341_init.Designer.cs" />
     <Compile Remove="Data\Migrations\20211224135040_init.cs" />
@@ -29,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\User\" />
+    <Folder Include="wwwroot\icons\" />
   </ItemGroup>
 
 </Project>

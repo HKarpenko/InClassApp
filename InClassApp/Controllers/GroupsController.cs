@@ -10,6 +10,7 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authorization;
 using InClassApp.Models.Dtos;
+using System.Collections.Generic;
 
 namespace InClassApp.Controllers
 {
@@ -175,6 +176,10 @@ namespace InClassApp.Controllers
                 LecturersIds = group.LecturerGroupRelations.Select(x => x.LecturerId).ToList()
             };
 
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            var currentUserRoles = await _userManager.GetRolesAsync(currentUser);
+
+            ViewData["Role"] = currentUserRoles.FirstOrDefault();
             ViewData["Subjects"] = await _subjectRepository.GetAll();
             ViewData["Lecturers"] = await _lecturersRepository.GetAll();
             return View(groupDto);
@@ -202,18 +207,21 @@ namespace InClassApp.Controllers
             {
                 try
                 {
+                    var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+                    var currentUserRoles = await _userManager.GetRolesAsync(currentUser);
+                    var role = currentUserRoles.FirstOrDefault();
+
                     var group = await _groupRepository.GetById(id);
-                    group.Name = group.Name;
-                    group.StudiesSemestr = group.StudiesSemestr;
-                    group.StartDate = group.StartDate;
-                    group.EndDate = group.EndDate;
-                    group.SubjectId = group.SubjectId;
-                    if(groupDto.LecturersIds != null)
+                    group.Name = groupDto.Name;
+                    group.StudiesSemestr = groupDto.StudiesSemestr;
+                    group.StartDate = groupDto.StartDate;
+                    group.EndDate = groupDto.EndDate;
+                    if(role == "Admin")
                     {
-                        foreach (var lecturerId in groupDto.LecturersIds)
-                        {
-                            await _groupRepository.AddLecturerGroupRelation(lecturerId, group.Id);
-                        }
+                        var currentLecturerIds = group.LecturerGroupRelations.Select(x => x.LecturerId).ToList();
+                        await DeltaGroupLecturerRelations(id, currentLecturerIds, groupDto.LecturersIds);
+                        group.SubjectId = groupDto.SubjectId;
+                        
                     }
 
                     await _groupRepository.Update(group);
@@ -470,6 +478,23 @@ namespace InClassApp.Controllers
                 return currentLecturer.LecturerGroupRelations.Any(r => r.GroupId == groupId);
             }
             return false;
+        }
+
+        private async Task<bool> DeltaGroupLecturerRelations(int groupId, ICollection<int> currentLecturerIds, ICollection<int> newLecturerIds)
+        {
+
+            foreach (var currentLecturerId in currentLecturerIds)
+            {
+                await _groupRepository.DeleteLecturerGroupRelation(currentLecturerId, groupId);
+            }
+            if (newLecturerIds != null)
+            {
+                foreach (var newLecturerId in newLecturerIds)
+                {
+                    await _groupRepository.AddLecturerGroupRelation(newLecturerId, groupId);
+                }
+            }
+            return true;
         }
     }
 }

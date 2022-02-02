@@ -1,0 +1,28 @@
+﻿.nav-panel-inclass {
+    background-color: #5e5e5e !important;
+    color: whitesmoke;
+    border: none;
+}
+
+.nav-link-inclass {
+    color: white !important;
+    font-size: 17px;
+    font-weight: bold;
+    margin-left: 15px;
+}
+
+.logo-inclass {
+    font-size: 25px;
+    font-family: 'Bree Serif';
+    font-weight: bold;
+    color: #191919 !important;
+}
+
+.login-logo{
+    padding-bottom: 5px;
+    color: white;
+}
+
+body {
+    background-color: #d1d1d1 !important;
+}

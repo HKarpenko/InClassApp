@@ -12,12 +12,21 @@ using System.Threading.Tasks;
 
 namespace InClassApp.Controllers
 {
+    /// <summary>
+    /// Controller to manage account creation and login processes
+    /// </summary>
     public class AccountController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IStudentRepository _studentRepository;
         private readonly SignInManager<AppUser> _signInManager;
 
+        /// <summary>
+        /// Accounts controller constructor
+        /// </summary>
+        /// <param name="serviceProvider">Service provider</param>
+        /// <param name="studentRepository">Student enitity repository</param>
+        /// <param name="signInManager">Sign in manager</param>
         public AccountController(IServiceProvider serviceProvider, IStudentRepository studentRepository, SignInManager<AppUser> signInManager)
         {
             _userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
@@ -25,12 +34,21 @@ namespace InClassApp.Controllers
             _signInManager = signInManager;
         }
 
+        /// <summary>
+        /// Registration GET endpoint
+        /// </summary>
+        /// <returns>Registration view</returns>
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
+        /// <summary>
+        /// Registration POST endpoint
+        /// </summary>
+        /// <param name="userModel">Registration form data</param>
+        /// <returns>If user successfully saved, redirect to groups; otherwise shows error message</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(UserRegistrationDto userModel)
@@ -66,15 +84,24 @@ namespace InClassApp.Controllers
 
             await _studentRepository.Add(newStudent);
             await _userManager.AddToRoleAsync(user, "Student");
-            return RedirectToAction("Index", "Groups");
+            return RedirectToAction("Login");
         }
 
+        /// <summary>
+        /// Login GET endpoint
+        /// </summary>
+        /// <returns>Login view</returns>
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
+        /// <summary>
+        /// Login POST endpoint
+        /// </summary>
+        /// <param name="userLoginDto">Registration form data</param>
+        /// <returns>If credentials successfully checked, redirect to groups; otherwise shows error message</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(UserLoginDto userLoginDto)
@@ -103,6 +130,10 @@ namespace InClassApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Logout POST endpoint
+        /// </summary>
+        /// <returns>Redirects to Login page</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()

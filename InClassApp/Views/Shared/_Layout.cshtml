@@ -12,35 +12,41 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="//cdn.jsdelivr.net/chosen/1.1.0/chosen.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/Shared/Layout.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bree Serif">
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="nav-panel-inclass navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">In Class</a>
+                <a class="logo-inclass navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">In Class</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
                         @if (SignInManager.IsSignedIn(User))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Groups" asp-action="Index">Groups</a>
+                                <a class="nav-link nav-link-inclass" asp-area="" asp-controller="Groups" asp-action="Index">Groups</a>
                             </li>
                             @if (UserManager.GetRolesAsync(await UserManager.GetUserAsync(User)).Result.Any(x => x.Equals("Admin")))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Subjects" asp-action="Index">Subjects</a>
+                                    <a class="nav-link nav-link-inclass" asp-area="" asp-controller="Subjects" asp-action="Index">Subjects</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="UsersList">Users</a>
+                                    <a class="nav-link nav-link-inclass" asp-area="" asp-controller="Users" asp-action="UsersList">Users</a>
                                 </li>
                             }
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link-inclass nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
                         }
                     </ul>
                     <partial name="_LoginPartial" />
@@ -56,7 +62,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2020 - Contoso University - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2022 - Wroclaw University
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

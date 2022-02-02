@@ -1,44 +1,48 @@
 ﻿@model InClassApp.Models.Dtos.UserRegistrationDto
 
-<h1>Register</h1>
-<h4>UserRegistrationModel</h4>
-<hr />
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/Account/Register.css" />
+}
+
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <h1>Register</h1>
         <form asp-action="Register">
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
+                <label asp-for="FirstName" class="register-label control-label"></label>
                 <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
+                <label asp-for="LastName" class="register-label control-label"></label>
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
+                <label asp-for="Email" class="register-label control-label"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Index" class="control-label"></label>
+                <label asp-for="Index" class="register-label control-label"></label>
                 <input asp-for="Index" class="form-control" />
                 <span asp-validation-for="Index" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
+                <label asp-for="Password" class="register-label control-label"></label>
                 <input asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ConfirmPassword" class="control-label"></label>
+                <label asp-for="ConfirmPassword" class=" register-label control-label"></label>
                 <input asp-for="ConfirmPassword" class="form-control" />
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Confirm" class="btn btn-primary" />
+                <input type="submit" value="Confirm" class="btn btn-primary float-right" />
             </div>
         </form>
     </div>

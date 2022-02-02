@@ -4,15 +4,24 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Groups</h1>
-
-@if (ViewBag.CurrentRole == "Admin")
+@section Styles
 {
-    <p>
-        <a asp-action="Create">Create New</a>
-    </p>
+    <link rel="stylesheet" href="~/css/Group/groups-list.css" />
 }
-<table class="table">
+
+<div class="groups-list-header row">
+    <div class="col-2">
+        <span class="groups-list-header-text">Groups</span>
+    </div>
+    <div class="col-8"></div>
+    @if (ViewBag.CurrentRole == "Admin")
+    {
+        <span class="groups-list-btn-add">
+            <a asp-action="Create" class="btn btn-success btn-lg">Create New +</a>
+        </span>
+    }
+</div>
+<table class="table table-striped">
     <thead>
         <tr>
             <th>
@@ -64,22 +73,26 @@
                     @Html.DisplayFor(modelItem => item.EndDate)
                 </td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                    @if (ViewBag.CurrentRole == "Admin")
-                    {
-                        <span>
-                            |
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        </span>
-                    }
-                    else if (ViewBag.CurrentRole == "Lecturer")
-                    {
-                        <span>
-                            |
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                        </span>
-                    }
+                    <div class="groups-list-actoins">
+                        <a asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Details">
+                            <i class="bi bi-card-list"></i>
+                        </a>
+                        @if (ViewBag.CurrentRole == "Admin")
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Delete">
+                                <i class="bi bi-trash-fill"></i>
+                            </a>
+                        }
+                        else if (ViewBag.CurrentRole == "Lecturer")
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                        }
+                    </div>
                 </td>
             </tr>
         }

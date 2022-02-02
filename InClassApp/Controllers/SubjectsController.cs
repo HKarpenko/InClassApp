@@ -21,6 +21,7 @@ namespace InClassApp.Controllers
         }
 
         // GET: Subjects
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var subjectsAsync = _subjectRepository.GetAll();
@@ -28,6 +29,7 @@ namespace InClassApp.Controllers
         }
 
         // GET: Subjects/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -46,6 +48,7 @@ namespace InClassApp.Controllers
         }
 
         // GET: Subjects/Create
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
@@ -67,6 +70,7 @@ namespace InClassApp.Controllers
         }
 
         // GET: Subjects/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -117,6 +121,7 @@ namespace InClassApp.Controllers
         }
 
         // GET: Subjects/Delete/5
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

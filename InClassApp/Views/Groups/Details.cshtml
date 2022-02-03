@@ -3,11 +3,35 @@
 @{
     ViewData["Title"] = "Details";
 }
-
-<h1>Details</h1>
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/Group/group-details.css" />
+}
 
 <div>
-    <h4>Group</h4>
+    <a asp-action="Index" data-toggle="tooltip" data-placement="top" title="Back">
+        <i class="bi bi-arrow-left-circle-fill back-action"></i>
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-10">
+        <span class="details-header">Group details</span>
+        <a asp-action="Edit" asp-route-id="@Model.Id" data-toggle="tooltip" data-placement="top" title="Edit">
+            <i class="bi bi-pencil-fill group-edit-icon"></i>
+        </a>
+    </div>
+    <div class="col-2">
+        @if (ViewBag.Rights == "Edit")
+        {
+            <a asp-action="StudentsList" asp-route-id="@Model.Id" class="btn btn-info btn-md">
+                Students list
+            </a>
+        }
+    </div>
+</div>
+
+<div>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -51,24 +75,21 @@
         </dd>
     </dl>
 </div>
-<div>
+
+<div class="meetings-list-header row mt-4">
+    <div class="col-2">
+        <h3>Meetings</h3>
+    </div>
+    <div class="col-8"></div>
     @if (ViewBag.Rights == "Edit")
     {
-        <span>
-            <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-            <a asp-action="StudentsList" asp-route-id="@Model.Id">Students list</a> |
+        <span class="meetings-list-add-btn">
+            <a href="@Url.Action("Create", "Meetings", new { groupId = Model.Id })" class="btn btn-success btn-md">
+                Create New +
+            </a>
         </span>
     }
-    <a asp-action="Index">Back to List</a>
 </div>
-
-<h4 class="mt-4">Meetings</h4>
-@if (ViewBag.Rights == "Edit")
-{
-    <p>
-        <a href="@Url.Action("Create", "Meetings", new { groupId = Model.Id })">Create New</a>
-    </p>
-}
 <table class="table">
     <thead>
         <tr>
@@ -81,7 +102,9 @@
             <th>
                 Group
             </th>
-            <th></th>
+            <th>
+                Actions
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -98,18 +121,26 @@
                     @item.Group.Name
                 </td>
                 <td>
-                    @if (ViewBag.Rights == "Edit")
-                    {
-                        <span>
-                            <a asp-controller="Meetings" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                            <a asp-controller="Meetings" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                            <a asp-controller="Meetings" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        </span>
-                    }
-                    else if (ViewBag.Rights == "Read")
-                    {
-                        <a asp-controller="Meetings" asp-action="DetailsStudent" asp-route-id="@item.Id">Details</a>
-                    }
+                    <div class="meetings-list-actions">
+                        @if (ViewBag.Rights == "Edit")
+                        {
+                            <a asp-controller="Meetings" asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Details">
+                                <i class="bi bi-card-list"></i>
+                            </a>
+                            <a asp-controller="Meetings" asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <a asp-controller="Meetings" asp-action="Delete" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Delete">
+                                <i class="bi bi-trash-fill"></i>
+                            </a>
+                        }
+                        else if (ViewBag.Rights == "Read")
+                        {
+                            <a asp-controller="Meetings" asp-action="DetailsStudent" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Details">
+                                <i class="bi bi-card-list"></i>
+                            </a>
+                        }
+                    </div>
                 </td>
             </tr>
         }

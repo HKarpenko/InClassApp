@@ -1,0 +1,13 @@
+﻿.back-action {
+    color: black;
+    font-size: 1.5em;
+}
+
+.add-student-confirm {
+    margin-top: 32px;
+}
+
+.student-index-label {
+    font-size: 17px;
+    font-weight: bold;
+}

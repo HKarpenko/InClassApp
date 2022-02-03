@@ -1,0 +1,20 @@
+﻿.back-action {
+    color: black;
+    font-size: 1.5em;
+}
+
+.details-header-text {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.details-header {
+    margin-bottom: 15px;
+}
+
+.user-edit-icon {
+    color: black;
+    margin-left: 10px;
+    padding-bottom: 5px;
+    font-size: 1.2em;
+}

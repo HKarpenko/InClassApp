@@ -4,33 +4,40 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/Subject/subject-create.css" />
+}
 
-<h4>Subject</h4>
+<div>
+    <a asp-action="Index" data-toggle="tooltip" data-placement="top" title="Back">
+        <i class="bi bi-arrow-left-circle-fill back-action"></i>
+    </a>
+</div>
+
+<h1>Create subject</h1>
+
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-2"></div>
+    <div class="col-md-6">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+                <label asp-for="Name" class="create-subject-label control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Code" class="control-label"></label>
+                <label asp-for="Code" class="create-subject-label control-label"></label>
                 <input asp-for="Code" class="form-control" />
                 <span asp-validation-for="Code" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary float-right" />
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

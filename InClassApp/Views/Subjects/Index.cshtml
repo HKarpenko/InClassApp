@@ -4,11 +4,20 @@
     ViewData["Title"] = "Subjects";
 }
 
-<h1>Subjects</h1>
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/Subject/subject-list.css" />
+}
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="subjects-list-header row">
+    <div class="col-2">
+        <span class="subjects-list-header-text">Subjects</span>
+    </div>
+    <div class="col-8"></div>
+    <span class="groups-list-btn-add">
+        <a asp-action="Create" class="btn btn-success btn-lg">Create New +</a>
+    </span>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -18,24 +27,35 @@
             <th>
                 @Html.DisplayNameFor(model => model.Code)
             </th>
-            <th></th>
+            <th>
+                Actions
+            </th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Code)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Code)
+                </td>
+                <td>
+                    <div class="subjects-list-actions">
+                        <a asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Details">
+                            <i class="bi bi-card-list"></i>
+                        </a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Delete">
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

@@ -4,10 +4,25 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/Subject/subject-details.css" />
+}
 
 <div>
-    <h4>Subject</h4>
+    <a asp-action="Index" data-toggle="tooltip" data-placement="top" title="Back">
+        <i class="bi bi-arrow-left-circle-fill back-action"></i>
+    </a>
+</div>
+
+<div class="details-header">
+    <span class="details-header-text">Subject details</span>
+    <a asp-action="Edit" asp-route-id="@Model.Id" data-toggle="tooltip" data-placement="top" title="Edit">
+        <i class="bi bi-pencil-fill subject-edit-icon"></i>
+    </a>
+</div>
+
+<div>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -24,10 +39,7 @@
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
 @if (ViewBag.Groups.Count > 0)
 {
     <h4 class="mt-4">Active Groups</h4>
@@ -52,40 +64,50 @@
                 <th>
                     EndDate
                 </th>
-                <th></th>
+                <th>
+                    Actions
+                </th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in ViewBag.Groups)
             {
-            <tr>
-                <td>
-                    @item.Name
-                </td>
-                <td>
-                    @item.StudiesSemestr
-                </td>
-                <td>
-                    @item.Subject.Name
-                </td>
-                <td>
-                    @foreach (var relation in item.LecturerGroupRelations)
-                    {
-                        <div>@relation.Lecturer.User.UserName</div>
-                    }
-                </td>
-                <td>
-                    @item.StartDate
-                </td>
-                <td>
-                    @item.EndDate
-                </td>
-                <td>
-                    <a asp-controller="Groups" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-controller="Groups" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-controller="Groups" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.StudiesSemestr
+                    </td>
+                    <td>
+                        @item.Subject.Name
+                    </td>
+                    <td>
+                        @foreach (var relation in item.LecturerGroupRelations)
+                        {
+                            <div>@relation.Lecturer.User.UserName</div>
+                        }
+                    </td>
+                    <td>
+                        @item.StartDate
+                    </td>
+                    <td>
+                        @item.EndDate
+                    </td>
+                    <td>
+                        <div class="subject-groups-list-actions">
+                            <a asp-controller="Groups" asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Details">
+                                <i class="bi bi-card-list"></i>
+                            </a>
+                            <a asp-controller="Groups" asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <a asp-controller="Groups" asp-action="Delete" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Delete">
+                                <i class="bi bi-trash-fill"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>

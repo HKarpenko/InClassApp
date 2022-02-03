@@ -1,0 +1,15 @@
+﻿.subjects-list-header-text {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.subjects-list-header {
+    margin-bottom: 15px;
+}
+
+.subjects-list-actions {
+    justify-content: space-between;
+    display: flex;
+    width: 40%;
+    margin-left: -24px;
+}

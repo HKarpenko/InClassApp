@@ -4,36 +4,41 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/PresenceRecords/attendance-edit.css" />
+}
 
-<h4>@Model.Student.User.UserName presence</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+<div>
+    <a asp-controller="Meetings" asp-action="Details" asp-route-id="@Model.MeetingId" data-toggle="tooltip" data-placement="top" title="Back">
+        <i class="bi bi-arrow-left-circle-fill back-action"></i>
+    </a>
+</div>
+
+<form asp-action="Edit">
+    <h1>Edit student attendance</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-4">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group form-check">
                 <h4>
-                    @Html.DisplayNameFor(model => model.Status)
+                    Is @Model.Student.User.UserName present?
                 </h4>
                 @Html.RadioButtonFor(model => model.Status, true)
-                <span>Present</span>
+                <span class="attendance-edit-status-label">Present</span>
                 <br />
                 @Html.RadioButtonFor(model => model.Status, false)
-                <span>Absent</span>
+                <span class="attendance-edit-status-label">Absent</span>
                 <br />
             </div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-success btn-lg mt-3" />
             </div>
-        </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-controller="Meetings" asp-action="Details" asp-route-id="@Model.MeetingId">Back to meeting</a>
-</div>
+</form>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -4,23 +4,16 @@
     ViewData["Title"] = "StartTimer";
 }
 
-@section styles{ 
-    <style>
-        .center {
-            margin: auto;
-            padding: 70px 0;
-            text-align: center;
-        }
-
-        .code-text {
-            font-size: 6rem;
-        }
-
-        .bordered {
-            border: 3px solid;
-        }
-    </style>
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/Meeting/meeting-attendance-check.css" />
 }
+
+<div>
+    <a asp-action="Details" asp-route-id="@Model.Id" data-toggle="tooltip" data-placement="top" title="Back">
+        <i class="bi bi-arrow-left-circle-fill back-action"></i>
+    </a>
+</div>
 
 <div class="row">
     <div class="col-2"></div>
@@ -33,17 +26,13 @@
     <div class="col-2"></div>
 </div>
 <div class="center">
-    <a href="#" class="btn btn-danger" onclick="StopCheck()">
+    <a href="#" class="btn btn-danger btn-lg" onclick="StopCheck()">
         Stop
     </a>
 </div>
 
-<div>
-    <a asp-action="Details" asp-route-id="@Model.Id">Back to Details</a>
-</div>
-
 @section scripts
-{ 
+{
     <script>
         function copyText() {
             let element = document.getElementById("code-text");

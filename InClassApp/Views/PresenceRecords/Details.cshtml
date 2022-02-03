@@ -4,33 +4,42 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/PresenceRecords/attendance-details.css" />
+}
 
 <div>
-    <h4>PresenceRecord</h4>
+    <a asp-controller="Meetings" asp-action="Details" asp-route-id="@Model.MeetingId" data-toggle="tooltip" data-placement="top" title="Back">
+        <i class="bi bi-arrow-left-circle-fill back-action"></i>
+    </a>
+</div>
+
+<span class="details-header">Attendance details</span>
+<a asp-action="Edit" asp-route-id="@Model.Id" data-toggle="tooltip" data-placement="top" title="Edit">
+    <i class="bi bi-pencil-fill attendance-edit-icon"></i>
+</a>
+
+<div>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Meeting.Group)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Meeting.Group.Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Student)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Student.User.UserName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Status)
         </dt>
         <dd class="col-sm-10">
             @(Model.Status ? "Present" : "Absent")
         </dd>
     </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-controller="Meetings" asp-action="Details" asp-route-id="@Model.MeetingId">Back to meeting</a>
 </div>

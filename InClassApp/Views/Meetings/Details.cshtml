@@ -4,10 +4,41 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/Meeting/meeting-details.css" />
+}
 
 <div>
-    <h4>Meeting</h4>
+    <a asp-controller="Groups" asp-action="Details" asp-route-id="@Model.GroupId" data-toggle="tooltip" data-placement="top" title="Back">
+        <i class="bi bi-arrow-left-circle-fill back-action"></i>
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-10">
+        <span class="details-header">Meetings details</span>
+        <a asp-action="Edit" asp-route-id="@Model.Id" data-toggle="tooltip" data-placement="top" title="Edit">
+            <i class="bi bi-pencil-fill meeting-edit-icon"></i>
+        </a>
+    </div>
+    <div class="col-2">
+        @if (Model.IsAttendanceCheckLaunched)
+        {
+            <a href="#" class="btn btn-danger check-state-change-btn" onclick="CheckRealesed()">
+                Stop checking
+            </a>
+        }
+        else
+        {
+            <a href="#" class="btn btn-success check-state-change-btn" onclick="OpenStartCheckModel()">
+                Start checking
+            </a>
+        }
+    </div>
+</div>
+
+<div>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -30,10 +61,6 @@
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-controller="Groups" asp-action="Details" asp-route-id="@Model.GroupId">Back</a>
-</div>
 
 <div class="modal fade" id="checkModal">
     <div class="modal-dialog">
@@ -54,17 +81,8 @@
 </div>
 @if (Model.IsAttendanceCheckLaunched)
 {
-    <a href="#" class="btn btn-danger" onclick="CheckRealesed()">
-        Stop checking
-    </a>
     <a href="#" class="btn btn-info" onclick="OpenCodeModal()">
         Show code
-    </a>
-}
-else
-{
-    <a href="#" class="btn btn-success" onclick="OpenStartCheckModel()">
-        Start checking
     </a>
 }
 
@@ -99,7 +117,9 @@ else
             <th>
                 Status
             </th>
-            <th></th>
+            <th>
+                Actions
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -116,8 +136,14 @@ else
                     @(item.Status ? "Present" : "Absent")
                 </td>
                 <td>
-                    <a asp-controller="PresenceRecords" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-controller="PresenceRecords" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    <div class="records-list-actions">
+                        <a asp-controller="PresenceRecords" asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Details">
+                            <i class="bi bi-card-list"></i>
+                        </a>
+                        <a asp-controller="PresenceRecords" asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                    </div>
                 </td>
             </tr>
         }

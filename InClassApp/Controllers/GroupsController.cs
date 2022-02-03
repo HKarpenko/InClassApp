@@ -270,10 +270,6 @@ namespace InClassApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var group = await _groupRepository.GetById(id);
-            foreach(var relation in group.LecturerGroupRelations)
-            {
-                await _groupRepository.DeleteLecturerGroupRelation((int)relation.LecturerId, (int)relation.GroupId);
-            }
 
             await _groupRepository.Delete(id);
             return RedirectToAction(nameof(Index));

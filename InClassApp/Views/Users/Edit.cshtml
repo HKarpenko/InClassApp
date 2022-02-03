@@ -7,56 +7,62 @@
 @{
     IEnumerable<string> availableRoles = ViewBag.Roles;
 }
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/User/user-edit.css" />
+}
 
-<h1>Edit</h1>
+<div>
+    <a asp-action="UsersList" data-toggle="tooltip" data-placement="top" title="Back">
+        <i class="bi bi-arrow-left-circle-fill back-action"></i>
+    </a>
+</div>
 
-<h4>User</h4>
+<h1>Edit user</h1>
+
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+                <label asp-for="Name" class="control-label edit-user-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Surname" class="control-label"></label>
+                <label asp-for="Surname" class="control-label edit-user-label"></label>
                 <input asp-for="Surname" class="form-control" />
                 <span asp-validation-for="Surname" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
+                <label asp-for="Email" class="control-label edit-user-label"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Role" class="control-label"></label>
+                <label asp-for="Role" class="control-label edit-user-label"></label>
                 @Html.DropDownListFor(m => m.Role, availableRoles.Select(x =>
                     new SelectListItem { Text = x, Value = x }),
                     new { @class = "form-control chosen-select" })
             </div>
             <div class="form-group">
-                <label asp-for="Index" class="control-label"></label>
+                <label asp-for="Index" class="control-label edit-user-label"></label>
                 <input asp-for="Index" class="form-control" />
                 <span asp-validation-for="Index" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PhoneNumber" class="control-label"></label>
+                <label asp-for="PhoneNumber" class="control-label edit-user-label"></label>
                 <input asp-for="PhoneNumber" class="form-control" />
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary float-right" />
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="UsersList">Back to List</a>
 </div>
 
 @section Scripts {

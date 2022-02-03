@@ -11,59 +11,66 @@
     string role = ViewBag.Role;
 }
 
-<h1>Edit</h1>
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/Group/group-edit.css" />
+}
 
-<h4>Group</h4>
+<div>
+    <a asp-action="Index" data-toggle="tooltip" data-placement="top" title="Back">
+        <i class="bi bi-arrow-left-circle-fill back-action"></i>
+    </a>
+</div>
+
+<h1>Edit group</h1>
+
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+                <label asp-for="Name" class="control-label create-group-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StudiesSemestr" class="control-label"></label>
+                <label asp-for="StudiesSemestr" class="control-label create-group-label"></label>
                 <input asp-for="StudiesSemestr" class="form-control" />
                 <span asp-validation-for="StudiesSemestr" class="text-danger"></span>
             </div>
             @if (role == "Admin")
             {
                 <div class="form-group">
-                    <label asp-for="SubjectId" class="control-label"></label>
+                    <label asp-for="SubjectId" class="control-label create-group-label"></label>
                     @Html.DropDownListFor(m => m.SubjectId, allSubjects.Select(x =>
                         new SelectListItem { Text = x.Name, Value = x.Id.ToString() }),
                         new { @class = "form-control chosen-select" })
                 </div>
                 <div class="form-group">
-                    <label asp-for="LecturersIds" class="control-label">Lecturers</label>
+                    <label asp-for="LecturersIds" class="control-label create-group-label">Lecturers</label>
                     @Html.DropDownListFor(m => m.LecturersIds, allLecturers.Select(x =>
                         new SelectListItem { Text = x.User.UserName, Value = x.Id.ToString() }),
                         new { @class = "form-control chosen-select", @multiple = true })
                 </div>
             }
             <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
+                <label asp-for="StartDate" class="control-label create-group-label"></label>
                 <input asp-for="StartDate" class="form-control" />
                 <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="EndDate" class="control-label"></label>
+                <label asp-for="EndDate" class="control-label create-group-label"></label>
                 <input asp-for="EndDate" class="form-control" />
                 <span asp-validation-for="EndDate" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary float-right" />
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

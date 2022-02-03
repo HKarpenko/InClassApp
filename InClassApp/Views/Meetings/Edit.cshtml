@@ -4,34 +4,41 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/Meeting/meeting-edit.css" />
+}
 
-<h4>Meeting</h4>
+<div>
+    <a asp-controller="Groups" asp-action="Details" asp-route-id="@ViewBag.GroupId" data-toggle="tooltip" data-placement="top" title="Back">
+        <i class="bi bi-arrow-left-circle-fill back-action"></i>
+    </a>
+</div>
+
+<h1>Meeting edit</h1>
+
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-2"></div>
+    <div class="col-md-6">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="MeetingStartDate" class="control-label"></label>
+                <label asp-for="MeetingStartDate" class="control-label meeting-edit-label"></label>
                 <input asp-for="MeetingStartDate" class="form-control" />
                 <span asp-validation-for="MeetingStartDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MeetingEndDate" class="control-label"></label>
+                <label asp-for="MeetingEndDate" class="control-label meeting-edit-label"></label>
                 <input asp-for="MeetingEndDate" class="form-control" />
                 <span asp-validation-for="MeetingEndDate" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary float-right" />
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-controller="Groups" asp-action="Details" asp-route-id="@ViewBag.GroupId">Back</a>
 </div>
 
 @section Scripts {

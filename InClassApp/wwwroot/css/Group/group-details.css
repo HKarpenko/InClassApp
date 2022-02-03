@@ -1,0 +1,30 @@
+﻿.details-header {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.meetings-list-header {
+    margin-bottom: 15px;
+}
+
+.meetings-list-add-btn {
+    padding: 5px;
+}
+
+.meetings-list-actions {
+    justify-content: space-evenly;
+    display: flex;
+    margin-left: -60px;
+}
+
+.group-edit-icon {
+    color: black;
+    margin-left: 10px;
+    padding-bottom: 5px;
+    font-size: 1.2em;
+}
+
+.back-action {
+    color: black;
+    font-size: 1.5em;
+}

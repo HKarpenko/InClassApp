@@ -4,12 +4,29 @@
     ViewData["Title"] = "List";
 }
 
-<h1>Group students</h1>
 
-<p>
-    <a href="@Url.Action("AddStudent", "Groups", new { groupId = ViewBag.GroupId })">Add</a> |
-    <a href="@Url.Action("Details", "Groups", new { id = ViewBag.GroupId })">Back to group</a>
-</p>
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/Group/group-students-list.css" />
+}
+
+<div>
+    <a href="@Url.Action("Details", "Groups", new { id = ViewBag.GroupId })" data-toggle="tooltip" data-placement="top" title="Back">
+        <i class="bi bi-arrow-left-circle-fill back-action"></i>
+    </a>
+</div>
+
+<div class="row student-list-header">
+    <div class="col-10">
+        <h1>Group students</h1>
+    </div>
+    <span class="add-student-btn">
+        <a href="@Url.Action("AddStudent", "Groups", new { groupId = ViewBag.GroupId })" class="btn btn-success btn-md">
+            Add student +
+        </a>
+    </span>
+</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -23,18 +40,22 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Index)
-            </td>
-            <td>
-                <a href="@Url.Action("RemoveStudent", "Groups", new { studentId = item.Id, groupId = ViewBag.GroupId })">Remove</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Index)
+                </td>
+                <td>
+                    <a  href="@Url.Action("RemoveStudent", "Groups", new { studentId = item.Id, groupId = ViewBag.GroupId })"
+                       data-toggle="tooltip" data-placement="top" title="Delete">
+                        <i class="bi bi-trash-fill"></i>
+                    </a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

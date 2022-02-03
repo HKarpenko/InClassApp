@@ -1,0 +1,26 @@
+﻿.back-action {
+    color: black;
+    font-size: 1.5em;
+}
+
+.details-header-text {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.details-header {
+    margin-bottom: 15px;
+}
+
+.subject-edit-icon {
+    color: black;
+    margin-left: 10px;
+    padding-bottom: 5px;
+    font-size: 1.2em;
+}
+
+.subject-groups-list-actions {
+    justify-content: space-evenly;
+    display: flex;
+    margin-left: -12px;
+}

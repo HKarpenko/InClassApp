@@ -42,7 +42,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.EndDate)
             </th>
-            <th></th>
+            <th>
+                Actions
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -73,7 +75,7 @@
                     @Html.DisplayFor(modelItem => item.EndDate)
                 </td>
                 <td>
-                    <div class="groups-list-actoins">
+                    <div class="groups-list-actions">
                         <a asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Details">
                             <i class="bi bi-card-list"></i>
                         </a>

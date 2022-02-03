@@ -1,0 +1,6 @@
+﻿.users-list-actions {
+    justify-content: space-between;
+    display: flex;
+    width: 40%;
+    margin-left: 5px;
+}

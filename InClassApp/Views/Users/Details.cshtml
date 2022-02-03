@@ -3,11 +3,25 @@
 @{
     ViewData["Title"] = "Details";
 }
-
-<h1>Details</h1>
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/User/user-details.css" />
+}
 
 <div>
-    <h4>Subject</h4>
+    <a asp-action="UsersList" data-toggle="tooltip" data-placement="top" title="Back">
+        <i class="bi bi-arrow-left-circle-fill back-action"></i>
+    </a>
+</div>
+
+<div class="details-header">
+    <span class="details-header-text">User details</span>
+    <a asp-action="Edit" asp-route-id="@Model.Id" data-toggle="tooltip" data-placement="top" title="Edit">
+        <i class="bi bi-pencil-fill user-edit-icon"></i>
+    </a>
+</div>
+
+<div>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -35,8 +49,4 @@
             @ViewBag.Role
         </dd>
     </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="UsersList">Back to List</a>
 </div>

@@ -4,10 +4,32 @@
     ViewData["Title"] = "DetailsStudent";
 }
 
-<h1>Meeting details</h1>
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/Meeting/meeting-details-student.css" />
+}
 
 <div>
-    <h4>Meeting</h4>
+    <a asp-controller="Groups" asp-action="Details" asp-route-id="@Model.GroupId" data-toggle="tooltip" data-placement="top" title="Back">
+        <i class="bi bi-arrow-left-circle-fill back-action"></i>
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-10">
+        <span class="details-header">Meetings details</span>
+    </div>
+    <div class="col-2">
+        @if (Model.IsAttendanceCheckLaunched && !ViewBag.CurrentUserStatus)
+        {
+            <a href="#" class="btn btn-success" onclick="OpenCodeProvideModal()">
+                Declare attendance
+            </a>
+        }
+    </div>
+</div>
+
+<div>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -36,9 +58,6 @@
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-controller="Groups" asp-action="Details" asp-route-id="@Model.GroupId">Back</a>
-</div>
 
 <div class="modal fade" id="inputCodeModal">
     <div class="modal-dialog">
@@ -58,12 +77,6 @@
         </div>
     </div>
 </div>
-@if (Model.IsAttendanceCheckLaunched && !ViewBag.CurrentUserStatus)
-{
-    <a href="#" class="btn btn-success" onclick="OpenCodeProvideModal()">
-        Declare attendance
-    </a>
-}
 
 @section scripts
 {

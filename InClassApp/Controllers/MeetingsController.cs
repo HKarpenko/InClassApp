@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace InClassApp.Controllers
 {
+    /// <summary>
+    /// Controller for meeting management
+    /// </summary>
     [Authorize]
     public class MeetingsController : Controller
     {
@@ -23,6 +26,9 @@ namespace InClassApp.Controllers
         private readonly IStudentRepository _studentRepository;
         private readonly UserManager<AppUser> _userManager;
 
+        /// <summary>
+        /// Meetings controller constructor
+        /// </summary>
         public MeetingsController(IMeetingRepository meetingRepository, IGroupRepository groupRepository,
             IPresenceRecordRepository presenceRecordRepository, IAttendanceCodeManager attendanceCodeManager,
             IServiceProvider serviceProvider, IStudentRepository studentRepository)
@@ -35,8 +41,13 @@ namespace InClassApp.Controllers
             _userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
         }
 
-        // GET: Meetings/Details/5
+        /// <summary>
+        /// Gets view with meetings details for admin or lecturer
+        /// </summary>
+        /// <param name="id">Meeting id</param>
+        /// <returns>Meeting details view for admin or lecturer</returns>
         [Authorize(Roles = "Admin, Lecturer")]
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -56,8 +67,13 @@ namespace InClassApp.Controllers
             return View(meeting);
         }
 
-        // GET: Meetings/DetailsStudent/5
+        /// <summary>
+        /// Gets view with meetings details for student
+        /// </summary>
+        /// <param name="id">Meeting id</param>
+        /// <returns>Meeting details view for student</returns>
         [Authorize(Roles = "Admin, Student")]
+        [HttpGet]
         public async Task<IActionResult> DetailsStudent(int? id)
         {
             if (id == null)
@@ -78,6 +94,12 @@ namespace InClassApp.Controllers
             return View(meeting);
         }
 
+        /// <summary>
+        /// Checks the code validity and sets the current student attendance status
+        /// </summary>
+        /// <param name="meetingId">Meeting id</param>
+        /// <param name="providedCode">Code provided by current user</param>
+        /// <returns><c>true</c> if code is correct; otherwise <c>false</c></returns>
         [HttpPost]
         [Authorize(Roles = "Admin, Student")]
         [Route("Meetings/ValidateCode")]
@@ -106,7 +128,11 @@ namespace InClassApp.Controllers
             return true;
         }
 
-        // GET: Meetings/Create/2
+        /// <summary>
+        /// Gets view for meeting create form
+        /// </summary>
+        /// <param name="groupId">Group id</param>
+        /// <returns>Meeting create form view</returns>
         [Authorize(Roles = "Admin, Lecturer")]
         [HttpGet("Create/{groupId}")]
         public IActionResult Create(int? groupId)
@@ -120,9 +146,12 @@ namespace InClassApp.Controllers
             return View();
         }
 
-        // POST: Meetings/Create/3
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Saves given meeting if it is valid
+        /// </summary>
+        /// <param name="groupId">Group id</param>
+        /// <param name="meeting">Meeting to save</param>
+        /// <returns>Meetings list view if saved successfully; otherwise showes an error message</returns>
         [HttpPost("Create/{groupId}")]
         [Authorize(Roles = "Admin, Lecturer")]
         [ValidateAntiForgeryToken]
@@ -151,8 +180,13 @@ namespace InClassApp.Controllers
             return View(meeting);
         }
 
-        // GET: Meetings/Edit/5
+        /// <summary>
+        /// Gets view with meeting edit form
+        /// </summary>
+        /// <param name="id">Meeting id</param>
+        /// <returns>Edit meeting view</returns>
         [Authorize(Roles = "Admin, Lecturer")]
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -171,9 +205,12 @@ namespace InClassApp.Controllers
             return View(meeting);
         }
 
-        // POST: Meetings/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Saves edited meeting if form is valid
+        /// </summary>
+        /// <param name="id">Meeting id</param>
+        /// <param name="meeting">Edited meeting</param>
+        /// <returns>Meetings list view if saved successfully; otherwise showes an error message</returns>
         [HttpPost]
         [Authorize(Roles = "Admin, Lecturer")]
         [ValidateAntiForgeryToken]
@@ -210,8 +247,13 @@ namespace InClassApp.Controllers
             return View(meeting);
         }
 
-        // GET: Meetings/Delete/5
+        /// <summary>
+        /// Gets view with meeting delete panel
+        /// </summary>
+        /// <param name="id">Meeting id</param>
+        /// <returns>Meeting delete panel view</returns>
         [Authorize(Roles = "Admin, Lecturer")]
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -228,7 +270,11 @@ namespace InClassApp.Controllers
             return View(meeting);
         }
 
-        // POST: Meetings/Delete/5
+        /// <summary>
+        /// Deletes meeting by id
+        /// </summary>
+        /// <param name="id">Meeting id</param>
+        /// <returns>Meetings list view</returns>
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Admin, Lecturer")]
         [ValidateAntiForgeryToken]
@@ -251,6 +297,11 @@ namespace InClassApp.Controllers
             return RedirectToAction("Details", "Groups", new { id = groupId });
         }
 
+        /// <summary>
+        /// Gets view with attendance code panel
+        /// </summary>
+        /// <param name="meetingId">Meeting id</param>
+        /// <returns>View with attendance code panel</returns>
         [HttpGet]
         [Authorize(Roles = "Admin, Lecturer")]
         [Route("Meetings/AttendanceCheck/{meetingId}")]
@@ -262,7 +313,12 @@ namespace InClassApp.Controllers
             return View(meeting);
         }
 
-        // POST: Meetings/AttendanceCheckRealesed
+        /// <summary>
+        /// Change status of attendance code checking, generates and sets the new code if check started
+        /// </summary>
+        /// <param name="meetingId"></param>
+        /// <param name="checkValue"></param>
+        /// <returns><c>true</c> if status seted successfully</returns>
         [HttpPost]
         [Authorize(Roles = "Admin, Lecturer")]
         [Route("Meetings/AttendanceCheck")]

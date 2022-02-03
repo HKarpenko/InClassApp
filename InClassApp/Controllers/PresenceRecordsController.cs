@@ -8,18 +8,28 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace InClassApp.Controllers
 {
+    /// <summary>
+    /// Controller for presence records management
+    /// </summary>
     [Authorize(Roles = "Admin, Lecturer")]
     public class PresenceRecordsController : Controller
     {
         private readonly IPresenceRecordRepository _presenceRecordRepository;
 
+        /// <summary>
+        /// Presence records controller constructor
+        /// </summary>
         public PresenceRecordsController(IPresenceRecordRepository presenceRecordRepository)
         {
             _presenceRecordRepository = presenceRecordRepository;
         }
 
-
-        // GET: PresenceRecords/Details/5
+        /// <summary>
+        /// Gets view with the presence record details
+        /// </summary>
+        /// <param name="id">Presence record id</param>
+        /// <returns>Presence record details view</returns>
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -36,7 +46,12 @@ namespace InClassApp.Controllers
             return View(presenceRecord);
         }
 
-        // GET: PresenceRecords/Edit/5
+        /// <summary>
+        /// Gets view with presence record edit form
+        /// </summary>
+        /// <param name="id">Presence record id</param>
+        /// <returns>Edit Presence record view</returns>
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -53,9 +68,12 @@ namespace InClassApp.Controllers
             return View(presenceRecord);
         }
 
-        // POST: PresenceRecords/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Saves edited group if form is valid
+        /// </summary>
+        /// <param name="id">Presence record id</param>
+        /// <param name="presenceRecord">Presence record to save</param>
+        /// <returns>Meeting details view if saved successfully; otherwise showes an error message</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Status,Id")] PresenceRecord presenceRecord)

@@ -10,17 +10,27 @@ using TwoFactorAuthNet;
 
 namespace InClassApp.Helpers
 {
+    /// <summary>
+    /// Service to manage attendance code processes
+    /// </summary>
     public class AttendanceCodeManager : IAttendanceCodeManager
     {
         public string CODE_GENERATION_SECRET { get; set; }
         public string CODE_ENCRYPTION_KEY { get; set; }
 
+        /// <summary>
+        /// Attendance code manager constructor
+        /// </summary>
         public AttendanceCodeManager(IConfiguration configuration)
         {
             CODE_GENERATION_SECRET = configuration["AttendanceCodeSecrets:CodeGenerationSecret"] ?? throw new ConfigurationErrorsException("CodeGenerationSecret");
             CODE_ENCRYPTION_KEY = configuration["AttendanceCodeSecrets:CodeEncryptionKey"] ?? throw new ConfigurationErrorsException("CodeEncryptionKey");
         }
 
+        /// <summary>
+        /// Creates and gets the attendance code
+        /// </summary>
+        /// <returns>Created attendance code</returns>
         public string CreateAttendanceCode()
         {
             var tfa = new TwoFactorAuth();
@@ -28,6 +38,11 @@ namespace InClassApp.Helpers
             return code;
         }
 
+        /// <summary>
+        /// Encrypts the code and save encryption data to meeting
+        /// </summary>
+        /// <param name="meetingToEncrypt">Meeting to save data in</param>
+        /// <param name="generatedCode">Generated code</param>
         public void EncryptMeeting(Meeting meetingToEncrypt, string generatedCode)
         {
             if (generatedCode == null)
@@ -45,6 +60,12 @@ namespace InClassApp.Helpers
             meetingToEncrypt.LastlyGeneratedCheckCode = Convert.ToBase64String(cipherText);
         }
 
+        /// <summary>
+        /// Decrypts code and gets decrypted value
+        /// </summary>
+        /// <param name="codeEncrypted">Code to decrypt</param>
+        /// <param name="IV">Initialization vector</param>
+        /// <returns>Decrypted code</returns>
         public string GetDecryptedCode(string codeEncrypted, string IV)
         {
             if(codeEncrypted == null)

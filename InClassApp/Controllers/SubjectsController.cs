@@ -8,19 +8,28 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace InClassApp.Controllers
 {
+    /// <summary>
+    /// Controller for subject management
+    /// </summary>
     [Authorize(Roles = "Admin")]
     public class SubjectsController : Controller
     {
         private readonly ISubjectRepository _subjectRepository;
         private readonly IGroupRepository _groupRepository;
 
+        /// <summary>
+        /// Subjects controller constructor
+        /// </summary>
         public SubjectsController(ISubjectRepository subjectRepository, IGroupRepository groupRepository)
         {
             _subjectRepository = subjectRepository;
             _groupRepository = groupRepository;
         }
 
-        // GET: Subjects
+        /// <summary>
+        /// Gets view with all subjects
+        /// </summary>
+        /// <returns>Subjects list view</returns>
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -28,7 +37,11 @@ namespace InClassApp.Controllers
             return View(await subjectsAsync);
         }
 
-        // GET: Subjects/Details/5
+        /// <summary>
+        /// Gets view with subject details
+        /// </summary>
+        /// <param name="id">Subject id</param>
+        /// <returns>Subject details view</returns>
         [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
@@ -47,16 +60,21 @@ namespace InClassApp.Controllers
             return View(subject);
         }
 
-        // GET: Subjects/Create
+        /// <summary>
+        /// Gets view with subject create form
+        /// </summary>
+        /// <returns>Create subject view</returns>
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Subjects/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Saves given subject if it is valid
+        /// </summary>
+        /// <param name="subject">Subject to add</param>
+        /// <returns>Subjects list view if saved successfully; otherwise showes an error message</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Code,Id")] Subject subject)
@@ -69,7 +87,11 @@ namespace InClassApp.Controllers
             return View(subject);
         }
 
-        // GET: Subjects/Edit/5
+        /// <summary>
+        /// Gets view with subject edit form
+        /// </summary>
+        /// <param name="id">Subject id</param>
+        /// <returns>Edit subject view</returns>
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -86,9 +108,12 @@ namespace InClassApp.Controllers
             return View(subject);
         }
 
-        // POST: Subjects/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Saves edited subject if form is valid
+        /// </summary>
+        /// <param name="id">Subject id</param>
+        /// <param name="subject">Subject to save</param>
+        /// <returns>Subjects list view if saved successfully; otherwise showes an error message</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Name,Code,Id")] Subject subject)
@@ -120,7 +145,11 @@ namespace InClassApp.Controllers
             return View(subject);
         }
 
-        // GET: Subjects/Delete/5
+        /// <summary>
+        /// Gets view with subject delete panel
+        /// </summary>
+        /// <param name="id">Subject id</param>
+        /// <returns>Subject delete panel view</returns>
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -138,7 +167,11 @@ namespace InClassApp.Controllers
             return View(subject);
         }
 
-        // POST: Subjects/Delete/5
+        /// <summary>
+        /// Deletes subject by id
+        /// </summary>
+        /// <param name="id">Subject id</param>
+        /// <returns>Subjects list view</returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

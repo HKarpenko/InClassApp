@@ -14,6 +14,9 @@ using System.Collections.Generic;
 
 namespace InClassApp.Controllers
 {
+    /// <summary>
+    /// Controller for group management
+    /// </summary>
     [Authorize]
     public class GroupsController : Controller
     {
@@ -25,6 +28,9 @@ namespace InClassApp.Controllers
         private readonly IPresenceRecordRepository _presenceRecordRepository;
         private readonly UserManager<AppUser> _userManager;
 
+        /// <summary>
+        /// Groups controller constructor
+        /// </summary>
         public GroupsController(ISubjectRepository subjectRepository, IGroupRepository groupRepository,
             ILecturersRepository lecturersRepository, IMeetingRepository meetingRepository, IStudentRepository studentRepository,
             IPresenceRecordRepository presenceRecordRepository, IServiceProvider serviceProvider)
@@ -38,7 +44,11 @@ namespace InClassApp.Controllers
             _userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
         }
 
-        // GET: Groups
+        /// <summary>
+        /// Gets view with all groups for current user
+        /// </summary>
+        /// <returns>Groups list view</returns>
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(HttpContext.User);
@@ -73,7 +83,12 @@ namespace InClassApp.Controllers
             return View(groups);
         }
 
-        // GET: Groups/Details/5
+        /// <summary>
+        /// Gets view with group details
+        /// </summary>
+        /// <param name="id">Group id</param>
+        /// <returns>Group details view</returns>
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -104,8 +119,12 @@ namespace InClassApp.Controllers
             return View(@group);
         }
 
-        // GET: Groups/Create
+        /// <summary>
+        /// Gets view with group create form
+        /// </summary>
+        /// <returns>Create group view</returns>
         [Authorize(Roles = "Admin")]
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             ViewData["Subjects"] = await _subjectRepository.GetAll();
@@ -113,9 +132,11 @@ namespace InClassApp.Controllers
             return View();
         }
 
-        // POST: Groups/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Saves given group if it is valid
+        /// </summary>
+        /// <param name="groupDto">Group dto to save</param>
+        /// <returns>Group list view if saved successfully; otherwise showes an error message</returns>
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
@@ -146,8 +167,13 @@ namespace InClassApp.Controllers
             return View();
         }
 
-        // GET: Groups/Edit/5
+        /// <summary>
+        /// Gets view with group edit form
+        /// </summary>
+        /// <param name="id">Group id</param>
+        /// <returns>Edit group view</returns>
         [Authorize(Roles = "Admin, Lecturer")]
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -185,9 +211,12 @@ namespace InClassApp.Controllers
             return View(groupDto);
         }
 
-        // POST: Groups/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Saves edited group if form is valid
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="groupDto">Group dto to save</param>
+        /// <returns>Group list view if saved successfully; otherwise showes an error message</returns>
         [HttpPost]
         [Authorize(Roles = "Admin, Lecturer")]
         [ValidateAntiForgeryToken]
@@ -245,8 +274,13 @@ namespace InClassApp.Controllers
             return View(groupDto);
         }
 
-        // GET: Groups/Delete/5
+        /// <summary>
+        /// Gets view with group delete panel
+        /// </summary>
+        /// <param name="id">Group id</param>
+        /// <returns>Group delete panel view</returns>
         [Authorize(Roles = "Admin")]
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -263,7 +297,11 @@ namespace InClassApp.Controllers
             return View(@group);
         }
 
-        // POST: Groups/Delete/5
+        /// <summary>
+        /// Deletes group by id
+        /// </summary>
+        /// <param name="id">Group id</param>
+        /// <returns>Groups list view</returns>
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
@@ -275,7 +313,11 @@ namespace InClassApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Groups/StudentsList/2
+        /// <summary>
+        /// Gets view with group students list
+        /// </summary>
+        /// <param name="id">Group id</param>
+        /// <returns>Group students list view</returns>
         [HttpGet]
         [Authorize(Roles = "Admin, Lecturer")]
         public async Task<IActionResult> StudentsList(int? id)
@@ -295,10 +337,14 @@ namespace InClassApp.Controllers
             return View(group.StudentGroupRelations.Select(x => x.Student));
         }
 
+        /// <summary>
+        /// Gets view with adding student to list form
+        /// </summary>
+        /// <param name="groupId">Group id</param>
+        /// <returns>Add student to group view</returns>
         [HttpGet]
         [Authorize(Roles = "Admin, Lecturer")]
         [Route("Groups/AddStudent/{groupId:int?}")]
-        // GET: Groups/AddStudent/3
         public async Task<IActionResult> AddStudent(int? groupId)
         {
             if (groupId == null)
@@ -319,9 +365,12 @@ namespace InClassApp.Controllers
             return View();
         }
 
-        // POST: Students/AddStudent/3
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Adds student by index to group
+        /// </summary>
+        /// <param name="groupId">Group id</param>
+        /// <param name="index">Students index</param>
+        /// <returns>Group students list view if saved successfully; otherwise shows an error message</returns>
         [HttpPost]
         [Route("Groups/AddStudent/{groupId:int?}")]
         [ValidateAntiForgeryToken]
@@ -365,7 +414,12 @@ namespace InClassApp.Controllers
             return View();
         }
 
-        // GET: Groups/RemoveStudent?groupId=3&&studentId=1
+        /// <summary>
+        /// Gets group student remove panel
+        /// </summary>
+        /// <param name="groupId">Group id</param>
+        /// <param name="studentId">Student id</param>
+        /// <returns>Group student panel view</returns>
         [HttpGet]
         [Authorize(Roles = "Admin, Lecturer")]
         public async Task<IActionResult> RemoveStudent(int? groupId, int? studentId)
@@ -390,7 +444,12 @@ namespace InClassApp.Controllers
             return View(student);
         }
 
-        // POST: Groups/RemoveStudent?groupId=3&&studentId=1
+        /// <summary>
+        /// Removes student form group
+        /// </summary>
+        /// <param name="groupId">Group id</param>
+        /// <param name="studentId">Student id</param>
+        /// <returns>Group students list view</returns>
         [HttpPost, ActionName("RemoveStudent")]
         [Authorize(Roles = "Admin, Lecturer")]
         [ValidateAntiForgeryToken]

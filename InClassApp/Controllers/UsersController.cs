@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace InClassApp.Controllers
 {
+    /// <summary>
+    /// Controller for user management
+    /// </summary>
     [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
@@ -22,6 +25,9 @@ namespace InClassApp.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
+        /// <summary>
+        /// Users controller constructor
+        /// </summary>
         public UsersController(IUserRepository userRepository, IServiceProvider serviceProvider,
             ILecturersRepository lecturersRepository, IStudentRepository studentRepository)
         {
@@ -32,7 +38,10 @@ namespace InClassApp.Controllers
             _roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         }
 
-        // GET: Users/UsersList
+        /// <summary>
+        /// Gets view with all users list
+        /// </summary>
+        /// <returns>Users list view</returns>
         public async Task<IActionResult> UsersList()
         {
             var users = await _userRepository.GetAll();
@@ -50,7 +59,11 @@ namespace InClassApp.Controllers
             return View(users);
         }
 
-        // GET: Users/Details/{id}
+        /// <summary>
+        /// Gets view with user details
+        /// </summary>
+        /// <param name="id">User id</param>
+        /// <returns>User details view</returns>
         public async Task<IActionResult> Details(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -69,6 +82,12 @@ namespace InClassApp.Controllers
             return View(user);
         }
 
+        /// <summary>
+        /// Gets view with user edit form
+        /// </summary>
+        /// <param name="id">User id</param>
+        /// <returns>Edit user view</returns>
+        [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -97,9 +116,12 @@ namespace InClassApp.Controllers
             return View(model);
         }
 
-        // POST: Subjects/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Saves edited user if form is valid
+        /// </summary>
+        /// <param name="id">User id</param>
+        /// <param name="userDto">User dto to save</param>
+        /// <returns>Users list view if saved successfully; otherwise showes an error message</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("Name,Surname,Email,PhoneNumber, Index, Role,Id")] SaveUserDto userDto)

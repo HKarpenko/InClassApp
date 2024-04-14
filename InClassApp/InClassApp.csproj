@@ -1,42 +1,33 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>aspnet-InClassApp-B836ECD7-451F-4376-9D9B-E845EB58A4E0</UserSecretsId>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Views\User\**" />
-    <Content Remove="Views\User\**" />
-    <EmbeddedResource Remove="Views\User\**" />
-    <None Remove="Views\User\**" />
+    <Folder Include="Models\Entities\" />
+    <Folder Include="Areas\" />
+    <Folder Include="Helpers\" />
+    <Folder Include="Repositories\" />
+    <Folder Include="Views\Account\" />
+    <Folder Include="Views\Groups\" />
+    <Folder Include="Views\Meetins\" />
+    <Folder Include="Views\Subjects\" />
+    <Folder Include="Views\PresenceRecords\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\Migrations\20211224132341_init.cs" />
-    <Compile Remove="Data\Migrations\20211224132341_init.Designer.cs" />
-    <Compile Remove="Data\Migrations\20211224135040_init.cs" />
-    <Compile Remove="Data\Migrations\20211224135040_init.Designer.cs" />
-    <Compile Remove="Data\Migrations\20211225214426_LecturerEntity.cs" />
-    <Compile Remove="Data\Migrations\20211225214426_LecturerEntity.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.15" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.15" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.15" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.21" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.21">
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
     <PackageReference Include="TwoFactorAuth.Net" Version="1.4.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\icons\" />
   </ItemGroup>
 
 </Project>

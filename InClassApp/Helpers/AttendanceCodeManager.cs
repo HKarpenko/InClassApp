@@ -23,8 +23,8 @@ namespace InClassApp.Helpers
         /// </summary>
         public AttendanceCodeManager(IConfiguration configuration)
         {
-            CODE_GENERATION_SECRET = configuration["AttendanceCodeSecrets:CodeGenerationSecret"] ?? throw new ConfigurationErrorsException("CodeGenerationSecret");
-            CODE_ENCRYPTION_KEY = configuration["AttendanceCodeSecrets:CodeEncryptionKey"] ?? throw new ConfigurationErrorsException("CodeEncryptionKey");
+            CODE_GENERATION_SECRET = configuration["AttendanceCodeSecrets:CodeGenerationSecret"] ?? throw new Exception("CodeGenerationSecret");
+            CODE_ENCRYPTION_KEY = configuration["AttendanceCodeSecrets:CodeEncryptionKey"] ?? throw new Exception("CodeEncryptionKey");
         }
 
         /// <summary>

@@ -3,13 +3,10 @@ using InClassApp.Helpers.Interfaces;
 using InClassApp.Models.Entities;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 
 namespace Tests
 {
-    public class Tests
+    public class AttendanceCodeManagerTests
     {
         private IAttendanceCodeManager _attendanceCodeManager;
 
@@ -73,7 +70,7 @@ namespace Tests
             Assert.AreEqual(originalCode, code);
         }
 
-        private static Dictionary<string,string> GetAppSettings()
+        private static Dictionary<string, string> GetAppSettings()
         {
             return new Dictionary<string, string>
             {

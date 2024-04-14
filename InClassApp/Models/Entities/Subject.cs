@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace InClassApp.Models.Entities
+﻿namespace InClassApp.Models.Entities
 {
     public class Subject : Entity
     {

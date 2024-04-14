@@ -1,6 +1,6 @@
 using InClassApp.Helpers;
 using InClassApp.Helpers.Interfaces;
-using InClassApp.Models.Entities;
+using Domain.Models.Entities;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
 

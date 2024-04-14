@@ -1,6 +1,6 @@
-﻿using InClassApp.Models.Dtos;
-using InClassApp.Models.Entities;
-using InClassApp.Repositories;
+﻿using Domain.Models.Dtos;
+using Domain.Models.Entities;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

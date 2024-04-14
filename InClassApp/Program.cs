@@ -1,9 +1,9 @@
-using InClassApp.Data;
-using InClassApp.Helpers.Interfaces;
-using InClassApp.Helpers;
-using InClassApp.Repositories;
+using Infrastructure.Data;
+using Application.Helpers.Interfaces;
+using Application.Helpers;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
-using InClassApp.Models.Entities;
+using Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,7 +42,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseDatabaseErrorPage();
+    app.UseExceptionHandler("/Error");
 }
 else
 {

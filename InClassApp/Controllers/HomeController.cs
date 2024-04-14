@@ -1,14 +1,8 @@
-﻿using InClassApp.Models;
-using InClassApp.Models.Entities;
+﻿using Domain.Models;
+using Domain.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace InClassApp.Controllers
 {

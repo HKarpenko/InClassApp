@@ -1,16 +1,11 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using InClassApp.Models.Entities;
-using InClassApp.Repositories;
+using Domain.Models.Entities;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
-using System;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authorization;
-using InClassApp.Models.Dtos;
-using System.Collections.Generic;
+using Domain.Models.Dtos;
 
 namespace InClassApp.Controllers
 {

@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using InClassApp.Models.Entities;
-using InClassApp.Repositories;
+using Domain.Models.Entities;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authorization;
 
 namespace InClassApp.Controllers

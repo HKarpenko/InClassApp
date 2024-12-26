@@ -10,7 +10,7 @@ namespace Infrastructure.Repositories
     /// </summary>
     public class LecturersRepository : BaseRepository<Lecturer>, ILecturersRepository
     {
-        private readonly ApplicationDbContext _context = null;
+        private readonly ApplicationDbContext _context;
 
         /// <summary>
         /// Lecturers Repository constructor
@@ -37,12 +37,13 @@ namespace Infrastructure.Repositories
         /// </summary>
         /// <param name="userId">User id</param>
         /// <returns>Lecturer by user id</returns>
-        public Task<Lecturer> GetLecturerByUserId(string userId)
+        public Task<Lecturer?> GetLecturerByUserIdAsNoTracking(string userId)
         {
             return _context.Lecturer
                 .Include(x => x.User)
                 .Include(x => x.LecturerGroupRelations)
                 .Where(x => x.UserId.Equals(userId))
+                .AsNoTracking()
                 .FirstOrDefaultAsync();
         }
     }

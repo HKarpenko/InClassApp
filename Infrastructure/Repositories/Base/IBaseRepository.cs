@@ -23,6 +23,12 @@
         Task<List<TEntity>> GetAll();
 
         /// <summary>
+        /// Gets all the entities as no tracking
+        /// </summary>
+        /// <returns>Entities list</returns>
+        Task<IQueryable<TEntity>> GetAllAsNoTracking();
+
+        /// <summary>
         /// Gets entity by id
         /// </summary>
         /// <param name="id">Entity id</param>

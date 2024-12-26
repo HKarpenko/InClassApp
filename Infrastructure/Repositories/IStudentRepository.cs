@@ -20,6 +20,13 @@ namespace Infrastructure.Repositories
         Task<Student> GetStudentByUserId(string userId);
 
         /// <summary>
+        /// Gets student by user id as no tracking
+        /// </summary>
+        /// <param name="userId">User id</param>
+        /// <returns>Student by user id</returns>
+        Task<Student?> GetStudentByUserIdAsNoTracking(string userId);
+
+        /// <summary>
         /// Gets students by ids list
         /// </summary>
         /// <param name="ids">Students ids list</param>

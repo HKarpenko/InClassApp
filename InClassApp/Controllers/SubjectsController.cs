@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Models.Entities;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Application.Services;
+using Application.Interfaces;
+using Domain.Models.Dtos;
 
 namespace InClassApp.Controllers
 {
@@ -12,15 +15,15 @@ namespace InClassApp.Controllers
     [Authorize(Roles = "Admin")]
     public class SubjectsController : Controller
     {
-        private readonly ISubjectRepository _subjectRepository;
         private readonly IGroupRepository _groupRepository;
+        private readonly ISubjectService _subjectService;
 
         /// <summary>
         /// Subjects controller constructor
         /// </summary>
-        public SubjectsController(ISubjectRepository subjectRepository, IGroupRepository groupRepository)
+        public SubjectsController(IGroupRepository groupRepository, ISubjectService subjectService)
         {
-            _subjectRepository = subjectRepository;
+            _subjectService = subjectService;
             _groupRepository = groupRepository;
         }
 
@@ -31,8 +34,8 @@ namespace InClassApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var subjectsAsync = _subjectRepository.GetAll();
-            return View(await subjectsAsync);
+            var subjectsAsync = await _subjectService.GetAllSubjects();
+            return View(subjectsAsync);
         }
 
         /// <summary>
@@ -43,12 +46,7 @@ namespace InClassApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var subject = await _subjectRepository.GetById((int)id);
+            var subject = id == null ? null : await _subjectService.GetSubjectById((int)id);
             if (subject == null)
             {
                 return NotFound();
@@ -75,11 +73,11 @@ namespace InClassApp.Controllers
         /// <returns>Subjects list view if saved successfully; otherwise showes an error message</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Code,Id")] Subject subject)
+        public async Task<IActionResult> Create([Bind("Name,Code,Id")] SaveSubjectDto subject)
         {
             if (ModelState.IsValid)
             {
-                await _subjectRepository.Add(subject);
+                await _subjectService.CreateSubject(subject);
                 return RedirectToAction(nameof(Index));
             }
             return View(subject);
@@ -93,12 +91,7 @@ namespace InClassApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var subject = await _subjectRepository.GetById((int)id);
+            var subject = id == null ? null : await _subjectService.GetSubjectById((int)id);
             if (subject == null)
             {
                 return NotFound();
@@ -114,7 +107,7 @@ namespace InClassApp.Controllers
         /// <returns>Subjects list view if saved successfully; otherwise showes an error message</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Code,Id")] Subject subject)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,Code,Id")] SaveSubjectDto subject)
         {
             if (id != subject.Id)
             {
@@ -125,7 +118,7 @@ namespace InClassApp.Controllers
             {
                 try
                 {
-                    await _subjectRepository.Update(subject);
+                    await _subjectService.UpdateSubject(subject);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -151,12 +144,7 @@ namespace InClassApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var subject = await _subjectRepository.GetById((int)id);
+            var subject = id == null ? null : await _subjectService.GetSubjectById((int)id);
             if (subject == null)
             {
                 return NotFound();
@@ -175,13 +163,13 @@ namespace InClassApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
 
-            await _subjectRepository.Delete(id);
+            await _subjectService.DeleteSubject(id);
             return RedirectToAction(nameof(Index));
         }
 
         private async Task<bool> SubjectExists(int id)
         {
-            var subjects = await _subjectRepository.GetAll();
+            var subjects = await _subjectService.GetAllSubjects();
             return subjects.Any(e => e.Id == id);
         }
     }

@@ -5,6 +5,8 @@ using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using Application.Interfaces;
+using Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,9 +25,16 @@ builder.Services.AddDefaultIdentity<AppUser>(options =>
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
+builder.Services.AddScoped<ISubjectService, SubjectService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IGroupService, GroupService>();
+builder.Services.AddScoped<ILecturerService, LecturerService>();
+builder.Services.AddScoped<IMeetingService, MeetingService>();
 builder.Services.AddScoped<IAttendanceCodeManager, AttendanceCodeManager>();
 
 builder.Services.AddScoped<IGroupRepository, GroupRepository>();

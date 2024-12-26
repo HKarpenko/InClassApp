@@ -38,6 +38,23 @@ namespace Infrastructure.Repositories
         }
 
         /// <summary>
+        /// Gets all the groups
+        /// </summary>
+        /// <returns>All groups</returns>
+        public async new Task<IQueryable<Group>> GetAllAsNoTracking()
+        {
+            return _context.Groups
+                .Include(x => x.Subject)
+                .Include(x => x.LecturerGroupRelations)
+                    .ThenInclude(r => r.Lecturer)
+                        .ThenInclude(l => l.User)
+                .Include(x => x.StudentGroupRelations)
+                    .ThenInclude(r => r.Student)
+                        .ThenInclude(s => s.User)
+                .AsNoTracking();
+        }
+
+        /// <summary>
         /// Gets group by id
         /// </summary>
         /// <param name="id">Group id</param>

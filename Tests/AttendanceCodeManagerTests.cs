@@ -1,5 +1,5 @@
-using InClassApp.Helpers;
-using InClassApp.Helpers.Interfaces;
+using Application.Helpers;
+using Application.Helpers.Interfaces;
 using Domain.Models.Entities;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;

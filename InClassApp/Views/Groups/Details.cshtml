@@ -1,4 +1,4 @@
-﻿@model Domain.Models.Entities.Group
+﻿@model Domain.Models.Dtos.GroupDto
 
 @{
     ViewData["Title"] = "Details";
@@ -17,7 +17,7 @@
 <div class="row">
     <div class="col-10">
         <span class="details-header">Group details</span>
-        @if (ViewBag.Rights == "Edit")
+        @if (ViewBag.Rights == AccessRight.ReadWrite)
         {
             <a asp-action="Edit" asp-route-id="@Model.Id" data-toggle="tooltip" data-placement="top" title="Edit">
                 <i class="bi bi-pencil-fill group-edit-icon"></i>
@@ -50,18 +50,18 @@
             @Html.DisplayFor(model => model.StudiesSemestr)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Subject)
+            Subject
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Subject.Name)
+            @Html.DisplayFor(model => model.SubjectName)
         </dd>
         <dt class="col-sm-2">
             Lecturers
         </dt>
         <dd class="col-sm-10">
-            @foreach (var item in Model.LecturerGroupRelations)
+            @foreach (var lecturer in Model.Lecturers)
             {
-                <div>@item.Lecturer.User.UserName</div>
+                <div>@lecturer</div>
             }
         </dd>
         <dt class="col-sm-2">
@@ -84,7 +84,7 @@
         <h3>Meetings</h3>
     </div>
     <div class="col-8"></div>
-    @if (ViewBag.Rights == "Edit")
+    @if (ViewBag.Rights == AccessRight.ReadWrite)
     {
         <span class="meetings-list-add-btn">
             <a href="@Url.Action("Create", "Meetings", new { groupId = Model.Id })" class="btn btn-success btn-md">
@@ -121,11 +121,11 @@
                     @item.MeetingEndDate
                 </td>
                 <td>
-                    @item.Group.Name
+                    @item.GroupName
                 </td>
                 <td>
                     <div class="meetings-list-actions">
-                        @if (ViewBag.Rights == "Edit")
+                        @if (ViewBag.Rights == AccessRight.ReadWrite)
                         {
                             <a asp-controller="Meetings" asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Details">
                                 <i class="bi bi-card-list"></i>
@@ -137,7 +137,7 @@
                                 <i class="bi bi-trash-fill"></i>
                             </a>
                         }
-                        else if (ViewBag.Rights == "Read")
+                        else if (ViewBag.Rights == AccessRight.ReadOnly)
                         {
                             <a asp-controller="Meetings" asp-action="DetailsStudent" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Details">
                                 <i class="bi bi-card-list"></i>

@@ -1,5 +1,4 @@
 ﻿using Infrastructure.Data;
-using Application.Helpers.Interfaces;
 using Domain.Models.Entities;
 using Infrastructure.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
@@ -12,15 +11,13 @@ namespace Infrastructure.Repositories
     public class MeetingRepository : BaseRepository<Meeting>, IMeetingRepository
     {
         private readonly ApplicationDbContext _context = null;
-        private readonly IAttendanceCodeManager _attendanceCodeManager;
 
         /// <summary>
         /// Meetings repository constructor
         /// </summary>
-        public MeetingRepository(ApplicationDbContext context, IAttendanceCodeManager attendanceCodeManager) : base(context) 
+        public MeetingRepository(ApplicationDbContext context) : base(context) 
         {
             _context = context;
-            _attendanceCodeManager = attendanceCodeManager;
         }
 
         /// <summary>

@@ -31,7 +31,6 @@ namespace Infrastructure.Repositories.Base
             await _context.SaveChangesAsync();
 
             return entity.Id;
-
         }
 
         /// <summary>
@@ -55,6 +54,16 @@ namespace Infrastructure.Repositories.Base
         {
             return await _context.Set<TEntity>()
                 .ToListAsync();
+        }
+
+        /// <summary>
+        /// Gets all the entities
+        /// </summary>
+        /// <returns>Entities list</returns>
+        public async Task<IQueryable<TEntity>> GetAllAsNoTracking()
+        {
+            return _context.Set<TEntity>()
+                .AsNoTracking();
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Domain.Models.Entities.Group>
+﻿@model IEnumerable<Domain.Models.Dtos.GroupDto>
 
 @{
     ViewData["Title"] = "Index";
@@ -14,7 +14,7 @@
         <span class="groups-list-header-text">Groups</span>
     </div>
     <div class="col-8"></div>
-    @if (ViewBag.CurrentRole == "Admin")
+    @if (ViewBag.CurrentRole == UserRole.Admin)
     {
         <span class="groups-list-btn-add">
             <a asp-action="Create" class="btn btn-success btn-lg">Create New +</a>
@@ -31,7 +31,7 @@
                 @Html.DisplayNameFor(model => model.StudiesSemestr)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Subject)
+                Subject
             </th>
             <th>
                 Lecturers
@@ -58,13 +58,13 @@
                     @Html.DisplayFor(modelItem => item.StudiesSemestr)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Subject.Name)
+                    @Html.DisplayFor(modelItem => item.SubjectName)
                 </td>
                 <td>
                     <dd class="col-sm-10">
-                        @foreach (var relation in item.LecturerGroupRelations)
+                        @foreach (var lecturer in item.Lecturers)
                         {
-                            <div>@relation.Lecturer.User.UserName</div>
+                            <div>@lecturer</div>
                         }
                     </dd>
                 </td>
@@ -79,7 +79,7 @@
                         <a asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Details">
                             <i class="bi bi-card-list"></i>
                         </a>
-                        @if (ViewBag.CurrentRole == "Admin")
+                        @if (ViewBag.CurrentRole == UserRole.Admin)
                         {
                             <a asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit">
                                 <i class="bi bi-pencil-fill"></i>
@@ -88,7 +88,7 @@
                                 <i class="bi bi-trash-fill"></i>
                             </a>
                         }
-                        else if (ViewBag.CurrentRole == "Lecturer")
+                        else if (ViewBag.CurrentRole == UserRole.Lecturer)
                         {
                             <a asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit">
                                 <i class="bi bi-pencil-fill"></i>

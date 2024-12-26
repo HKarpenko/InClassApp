@@ -14,10 +14,8 @@ namespace Domain.Models.Entities
 
         public Subject Subject { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? StartDate { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? EndDate { get; set; }
 
         public ICollection<Meeting> Meetings { get; set; }

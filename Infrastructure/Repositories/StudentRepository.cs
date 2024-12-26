@@ -10,7 +10,7 @@ namespace Infrastructure.Repositories
     /// </summary>
     public class StudentRepository : BaseRepository<Student>, IStudentRepository
     {
-        private readonly ApplicationDbContext _context = null;
+        private readonly ApplicationDbContext _context;
 
         /// <summary>
         /// Students repository constructor
@@ -80,6 +80,20 @@ namespace Infrastructure.Repositories
             return await _context.Student
                  .Include(x => x.StudentGroupRelations)
                  .Where(x => x.UserId == userId)
+                 .FirstOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// Gets student by user id as no tracking
+        /// </summary>
+        /// <param name="userId">User id</param>
+        /// <returns>Student by user id</returns>
+        public async Task<Student?> GetStudentByUserIdAsNoTracking(string userId)
+        {
+            return await _context.Student
+                 .Include(x => x.StudentGroupRelations)
+                 .Where(x => x.UserId == userId)
+                 .AsNoTracking()
                  .FirstOrDefaultAsync();
         }
     }

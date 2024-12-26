@@ -178,7 +178,7 @@ namespace InClassApp.Controllers
             {
                 if (currentRoles.Contains("Lecturer"))
                 {
-                    var lecturer = await _lecturersRepository.GetLecturerByUserId(userId);
+                    var lecturer = await _lecturersRepository.GetLecturerByUserIdAsNoTracking(userId);
                     await _lecturersRepository.Delete(lecturer.Id);
                 }
                 else if (currentRoles.Contains("Student"))

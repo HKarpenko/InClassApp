@@ -20,13 +20,13 @@
         /// Gets all the entities
         /// </summary>
         /// <returns>Entities list</returns>
-        Task<List<TEntity>> GetAll();
+        IQueryable<TEntity> GetAll();
 
         /// <summary>
         /// Gets all the entities as no tracking
         /// </summary>
         /// <returns>Entities list</returns>
-        Task<IQueryable<TEntity>> GetAllAsNoTracking();
+        IQueryable<TEntity> GetAllAsNoTracking();
 
         /// <summary>
         /// Gets entity by id
@@ -47,7 +47,7 @@
         /// </summary>
         /// <param name="ids">Entities ids list</param>
         /// <returns>Entities list</returns>
-        Task<List<TEntity>> GetByIds(IEnumerable<int> ids);
+        IQueryable<TEntity> GetByIds(IEnumerable<int> ids);
 
         /// <summary>
         /// Deletes entity from db

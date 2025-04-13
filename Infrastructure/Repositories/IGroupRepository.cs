@@ -10,7 +10,7 @@ namespace Infrastructure.Repositories
         /// </summary>
         /// <param name="subjectId">Subject id</param>
         /// <returns>Groups by subject id</returns>
-        Task<List<Group>> GetGroupsBySubjectId(int subjectId);
+        IQueryable<Group> GetGroupsBySubjectId(int subjectId);
 
         /// <summary>
         /// Adds student in group record
@@ -43,5 +43,21 @@ namespace Infrastructure.Repositories
         /// <param name="groupId">Group id</param>
         /// <returns>Status of deletion</returns>
         Task<bool> DeleteLecturerGroupRelation(int lecturerId, int groupId);
+
+        /// <summary>
+        /// Adds lecturer in group record, but don't save to db
+        /// </summary>
+        /// <param name="lecturerId">Lecturer id</param>
+        /// <param name="groupId">Group id</param>
+        /// <returns>New added record id</returns>
+        Task<int> AddLecturerGroupRelationNotSaved(int lecturerId, int groupId);
+
+        /// <summary>
+        /// Deletes lecturer in group record, but don't save to db
+        /// </summary>
+        /// <param name="lecturerId">Lecturer id</param>
+        /// <param name="groupId">Group id</param>
+        /// <returns>Status of deletion</returns>
+        Task<bool> DeleteLecturerGroupRelationNotSaved(int lecturerId, int groupId);
     }
 }

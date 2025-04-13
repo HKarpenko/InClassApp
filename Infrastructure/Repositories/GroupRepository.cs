@@ -24,24 +24,23 @@ namespace Infrastructure.Repositories
         /// Gets all the groups
         /// </summary>
         /// <returns>All groups</returns>
-        public async new Task<List<Group>> GetAll()
+        public new IQueryable<Group> GetAll()
         {
-            return await _context.Groups
+            return _context.Groups
                 .Include(x => x.Subject)
                 .Include(x => x.LecturerGroupRelations)
                     .ThenInclude(r => r.Lecturer)
                         .ThenInclude(l => l.User)
                 .Include(x => x.StudentGroupRelations)
                     .ThenInclude(r => r.Student)
-                        .ThenInclude(s => s.User)
-                .ToListAsync();
+                        .ThenInclude(s => s.User);
         }
 
         /// <summary>
         /// Gets all the groups
         /// </summary>
         /// <returns>All groups</returns>
-        public async new Task<IQueryable<Group>> GetAllAsNoTracking()
+        public new IQueryable<Group> GetAllAsNoTracking()
         {
             return _context.Groups
                 .Include(x => x.Subject)
@@ -75,13 +74,34 @@ namespace Infrastructure.Repositories
         }
 
         /// <summary>
+        /// Gets group by id
+        /// </summary>
+        /// <param name="id">Group id</param>
+        /// <returns>Group</returns>
+        public async new Task<Group> GetByIdAsNoTracking(int id)
+        {
+            return await _context.Groups
+                 .Include(x => x.Subject)
+                 .Include(x => x.Meetings)
+                 .Include(x => x.LecturerGroupRelations)
+                    .ThenInclude(r => r.Lecturer)
+                        .ThenInclude(l => l.User)
+                 .Include(x => x.StudentGroupRelations)
+                    .ThenInclude(r => r.Student)
+                        .ThenInclude(s => s.User)
+                 .Where(x => x.Id == id)
+                 .AsNoTracking()
+                 .FirstOrDefaultAsync();
+        }
+
+        /// <summary>
         /// Gets groups by subject id
         /// </summary>
         /// <param name="subjectId">Subject id</param>
         /// <returns>Groups by subject id</returns>
-        public async Task<List<Group>> GetGroupsBySubjectId(int subjectId)
+        public IQueryable<Group> GetGroupsBySubjectId(int subjectId)
         {
-            return await _context.Groups
+            return _context.Groups
                  .Include(x => x.Subject)
                  .Include(x => x.LecturerGroupRelations)
                     .ThenInclude(r => r.Lecturer)
@@ -89,8 +109,7 @@ namespace Infrastructure.Repositories
                  .Include(x => x.StudentGroupRelations)
                     .ThenInclude(r => r.Student)
                         .ThenInclude(s => s.User)
-                 .Where(x => x.SubjectId == subjectId)
-                 .ToListAsync();
+                 .Where(x => x.SubjectId == subjectId);
         }
 
         /// <summary>
@@ -141,7 +160,35 @@ namespace Infrastructure.Repositories
         /// <returns>New added record id</returns>
         public async Task<int> AddLecturerGroupRelation(int lecturerId, int groupId)
         {
-            var currentRelation = (await GetById(groupId)).LecturerGroupRelations.FirstOrDefault(x => x.LecturerId == lecturerId);
+            var id = await AddLecturerGroupRelationNotSaved(lecturerId, groupId);
+            await _context.SaveChangesAsync();
+
+            return id;
+        }
+
+        /// <summary>
+        /// Deletes lecturer in group record
+        /// </summary>
+        /// <param name="lecturerId">Lecturer id</param>
+        /// <param name="groupId">Group id</param>
+        /// <returns>Status of deletion</returns>
+        public async Task<bool> DeleteLecturerGroupRelation(int lecturerId, int groupId)
+        {
+            var result = await DeleteLecturerGroupRelationNotSaved(lecturerId, groupId);
+            await _context.SaveChangesAsync();
+
+            return result;
+        }
+
+        /// <summary>
+        /// Adds lecturer in group record
+        /// </summary>
+        /// <param name="lecturerId">Lecturer id</param>
+        /// <param name="groupId">Group id</param>
+        /// <returns>New added record id</returns>
+        public async Task<int> AddLecturerGroupRelationNotSaved(int lecturerId, int groupId)
+        {
+            var currentRelation = (await GetById(groupId)).LecturerGroupRelations.First(x => x.LecturerId == lecturerId);
             if (currentRelation != null)
             {
                 return currentRelation.Id;
@@ -153,7 +200,6 @@ namespace Infrastructure.Repositories
                 GroupId = groupId
             };
             _context.Set<LecturerGroupRelation>().Add(relation);
-            await _context.SaveChangesAsync();
 
             return relation.Id;
         }
@@ -164,17 +210,15 @@ namespace Infrastructure.Repositories
         /// <param name="lecturerId">Lecturer id</param>
         /// <param name="groupId">Group id</param>
         /// <returns>Status of deletion</returns>
-        public async Task<bool> DeleteLecturerGroupRelation(int lecturerId, int groupId)
+        public async Task<bool> DeleteLecturerGroupRelationNotSaved(int lecturerId, int groupId)
         {
-            var group = await GetById(groupId);
-            var relation = group.LecturerGroupRelations.FirstOrDefault(r => r.LecturerId == lecturerId);
+            var relation = (await GetById(groupId)).LecturerGroupRelations.First(r => r.LecturerId == lecturerId);
             if (relation == null)
             {
                 return false;
             }
 
             _context.Set<LecturerGroupRelation>().Remove(relation);
-            await _context.SaveChangesAsync();
 
             return true;
         }

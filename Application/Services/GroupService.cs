@@ -4,94 +4,132 @@ using Domain.Models.Dtos;
 using Domain.Models.Entities;
 using Domain.Models.Enums;
 using Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 
-namespace Application.Services
+namespace Application.Services;
+
+public class GroupService(IGroupRepository groupRepository,
+        IUserService userService,
+        IMapper mapper,
+        ILecturersRepository lecturersRepository,
+        IStudentRepository studentRepository) : IGroupService
 {
-    public class GroupService : IGroupService
+    public async Task<List<GroupDto>> GetGroupDtosByUser(AppUser user)
     {
-        private readonly IGroupRepository _groupRepository;
-        private readonly IUserService _userService;
-        private readonly IMapper _autoMapper;
-        private readonly ILecturersRepository _lecturersRepository;
-        private readonly IStudentRepository _studentRepository;
+        var groups = await groupRepository.GetAllAsNoTracking().ToListAsync();
+        var mainRole = await userService.GetUserMainRole(user);
 
-        public GroupService(IGroupRepository groupRepository, IUserService userService, IMapper autoMapper,
-            ILecturersRepository lecturersRepository, IStudentRepository studentRepository)
+        if (mainRole == UserRole.Lecturer)
         {
-            _groupRepository = groupRepository;
-            _userService = userService;
-            _autoMapper = autoMapper;
-            _lecturersRepository = lecturersRepository;
-            _studentRepository = studentRepository;
+            Lecturer currentLecturer = await lecturersRepository.GetLecturerByUserIdAsNoTracking(user.Id) ??
+                throw new NullReferenceException($"Current user: {user.UserName} has role of Lecturer, but such entity not found");
+            groups = groups.Where(x => x.LecturerGroupRelations.Any(r => r.LecturerId == currentLecturer.Id)).ToList();
+        }
+        else if (mainRole == UserRole.Student)
+        {
+            var currentStudent = await studentRepository.GetStudentByUserIdAsNoTracking(user.Id) ??
+                throw new NullReferenceException($"Current user: {user.UserName} has role of Student, but such entity not found");
+            groups = groups.Where(x => x.StudentGroupRelations.Any(r => r.StudentId == currentStudent.Id)).ToList();
         }
 
-        public async Task<List<GroupDto>> GetGroupDtosByUser(AppUser user)
+        return mapper.Map<List<GroupDto>>(groups);
+    }
+
+    public async Task<AccessRight?> GetUserGroupAccessRights(AppUser user, int groupId)
+    {
+        var mainRole = await userService.GetUserMainRole(user);
+        if (mainRole == UserRole.Admin)
         {
-            var groups = await _groupRepository.GetAllAsNoTracking();
-            var mainRole = await _userService.GetUserMainRole(user);
+            return AccessRight.ReadWrite;
+        }
+        else if (mainRole == UserRole.Lecturer)
+        {
+            var currentLecturer = await lecturersRepository.GetLecturerByUserIdAsNoTracking(user.Id) ??
+                throw new NullReferenceException($"Current user: {user.UserName} has role of Lecturer, but such entity not found");
+            return currentLecturer.LecturerGroupRelations.Any(r => r.GroupId == groupId) ? AccessRight.ReadWrite
+                : null;
+        }
+        else if (mainRole == UserRole.Student)
+        {
+            var currentStudent = await studentRepository.GetStudentByUserIdAsNoTracking(user.Id) ??
+                throw new NullReferenceException($"Current user: {user.UserName} has role of Student, but such entity not found");
 
-            if (mainRole == UserRole.Lecturer)
-            {
-                Lecturer currentLecturer = await _lecturersRepository.GetLecturerByUserIdAsNoTracking(user.Id) ??
-                    throw new NullReferenceException($"Current user: {user.UserName} has role of Lecturer, but such entity not found");
-                groups = groups.Where(x => x.LecturerGroupRelations.Any(r => r.LecturerId == currentLecturer.Id));
-            }
-            else if (mainRole == UserRole.Student)
-            {
-                var currentStudent = await _studentRepository.GetStudentByUserIdAsNoTracking(user.Id) ??
-                    throw new NullReferenceException($"Current user: {user.UserName} has role of Student, but such entity not found");
-                groups = groups.Where(x => x.StudentGroupRelations.Any(r => r.StudentId == currentStudent.Id));
-            }
-
-            return _autoMapper.Map<List<GroupDto>>(groups.ToList());
+            return currentStudent.StudentGroupRelations.Any(r => r.GroupId == groupId) ? AccessRight.ReadOnly
+                : null;
         }
 
-        public async Task<AccessRight?> GetUserGroupAccessRights(AppUser user, int groupId)
+        return null;
+    }
+
+    public async Task<IEnumerable<GroupDto>> GetAllGroups()
+    {
+        var groups = await groupRepository.GetAllAsNoTracking().ToListAsync();
+        return mapper.Map<List<GroupDto>>(groups);
+    }
+
+    public async Task<GroupDto> GetGroupDtoById(int id)
+    {
+        return mapper.Map<GroupDto>(await groupRepository.GetById(id));
+    }
+
+    public async Task<SaveGroupDto> GetSaveGroupDtoById(int id)
+    {
+        var group = await groupRepository.GetByIdAsNoTracking(id);
+        return mapper.Map<SaveGroupDto>(group);
+    }
+
+    public async Task CreateNewGroup(SaveGroupDto saveGroupDto)
+    {
+        Group newGroup = mapper.Map<Group>(saveGroupDto);
+        newGroup.SubjectId = saveGroupDto.SubjectId;
+        await groupRepository.Add(newGroup);
+
+        foreach (var lecturerId in saveGroupDto.LecturersIds)
         {
-            var mainRole = await _userService.GetUserMainRole(user);
-            if (mainRole == UserRole.Admin)
-            {
-                return AccessRight.ReadWrite;
-            }
-            else if (mainRole == UserRole.Lecturer)
-            {
-                var currentLecturer = await _lecturersRepository.GetLecturerByUserIdAsNoTracking(user.Id) ??
-                    throw new NullReferenceException($"Current user: {user.UserName} has role of Lecturer, but such entity not found");
-                return currentLecturer.LecturerGroupRelations.Any(r => r.GroupId == groupId) ? AccessRight.ReadWrite
-                    : null;
-            }
-            else if (mainRole == UserRole.Student)
-            {
-                var currentStudent = await _studentRepository.GetStudentByUserIdAsNoTracking(user.Id) ??
-                    throw new NullReferenceException($"Current user: {user.UserName} has role of Student, but such entity not found");
-
-                return currentStudent.StudentGroupRelations.Any(r => r.GroupId == groupId) ? AccessRight.ReadOnly
-                    : null;
-            }
-            
-            return null;
+            await groupRepository.AddLecturerGroupRelation(lecturerId, newGroup.Id);
         }
+    }
 
-        public async Task<GroupDto> GetGroupDtoById(int id)
+    public async Task UpdateGroup(AppUser user, SaveGroupDto saveGroupDto)
+    {
+        var currentUserRole = await userService.GetUserMainRole(user);
+
+        var existingGroup = await groupRepository.GetByIdAsNoTracking(saveGroupDto.Id);
+        mapper.Map(saveGroupDto, existingGroup);
+        if (currentUserRole == UserRole.Admin)
         {
-            return _autoMapper.Map<GroupDto>(await _groupRepository.GetById(id));
+            var currentLecturerIds = existingGroup.LecturerGroupRelations.Select(x => x.LecturerId).ToList();
+            await DeltaGroupLecturerRelationsNotSaved(saveGroupDto.Id, currentLecturerIds, saveGroupDto.LecturersIds);
+            existingGroup.SubjectId = saveGroupDto.SubjectId;
         }
+        await groupRepository.Update(existingGroup);
+    }
 
-        public async Task<SaveGroupDto> GetSaveGroupDtoById(int id)
+    public async Task DeleteGroup(int groupId)
+    {
+        await groupRepository.Delete(groupId);
+    }
+
+    private async Task<bool> DeltaGroupLecturerRelationsNotSaved(int groupId, ICollection<int> currentLecturerIds, ICollection<int> newLecturerIds)
+    {
+        foreach (var lecturerId in currentLecturerIds.Except(newLecturerIds))
         {
-            var group = await _groupRepository.GetById(id);
-            return _autoMapper.Map<SaveGroupDto>(group);
+            await groupRepository.DeleteLecturerGroupRelationNotSaved(lecturerId, groupId);
         }
-
-        public async Task CreateNewGroup(SaveGroupDto saveGroupDto)
+        foreach (var lecturerId in newLecturerIds.Except(currentLecturerIds))
         {
-            Group newGroup = _autoMapper.Map<Group>(saveGroupDto);
-            await _groupRepository.Add(newGroup);
-
-            foreach (var lecturerId in saveGroupDto.LecturersIds)
-            {
-                await _groupRepository.AddLecturerGroupRelation(lecturerId, newGroup.Id);
-            }
+            await groupRepository.AddLecturerGroupRelationNotSaved(lecturerId, groupId);
         }
+        return true;
+    }
+
+    public async Task AddStudentGroupRelation(int studentId, int groupId)
+    {
+        await groupRepository.AddStudentGroupRelation(studentId, groupId);
+    }
+
+    public async Task DeleteStudentGroupRelation(int studentId, int groupId)
+    {
+        await groupRepository.DeleteStudentGroupRelation(studentId, groupId);
     }
 }

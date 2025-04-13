@@ -2,6 +2,7 @@
 using Domain.Models.Entities;
 using Infrastructure.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Repositories
 {
@@ -24,11 +25,10 @@ namespace Infrastructure.Repositories
         /// Gets all the students
         /// </summary>
         /// <returns>Students list</returns>
-        public async new Task<List<Student>> GetAll()
+        public new IQueryable<Student> GetAll()
         {
-            return await _context.Student
-                .Include(x => x.User)
-                .ToListAsync();
+            return _context.Student
+                .Include(x => x.User);
         }
 
         /// <summary>
@@ -44,17 +44,23 @@ namespace Infrastructure.Repositories
                  .FirstOrDefaultAsync();
         }
 
+        public new IQueryable<Student> GetAllAsNoTracking()
+        {
+            return _context.Student
+                .Include(x => x.User)
+                .AsNoTracking();
+        }
+
         /// <summary>
         /// Gets students by ids list
         /// </summary>
         /// <param name="ids">Students ids list</param>
         /// <returns>Students list</returns>
-        public async new Task<List<Student>> GetByIds(IEnumerable<int> ids)
+        public new IQueryable<Student> GetByIds(IEnumerable<int> ids)
         {
-            return await _context.Student
+            return _context.Student
                  .Include(x => x.User)
-                 .Where(x => ids.Contains(x.Id))
-                 .ToListAsync();
+                 .Where(x => ids.Contains(x.Id));
         }
 
         /// <summary>

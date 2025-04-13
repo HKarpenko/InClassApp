@@ -50,17 +50,16 @@ namespace Infrastructure.Repositories.Base
         /// Gets all the entities
         /// </summary>
         /// <returns>Entities list</returns>
-        public async Task<List<TEntity>> GetAll()
+        public IQueryable<TEntity> GetAll()
         {
-            return await _context.Set<TEntity>()
-                .ToListAsync();
+            return _context.Set<TEntity>();
         }
 
         /// <summary>
         /// Gets all the entities
         /// </summary>
         /// <returns>Entities list</returns>
-        public async Task<IQueryable<TEntity>> GetAllAsNoTracking()
+        public IQueryable<TEntity> GetAllAsNoTracking()
         {
             return _context.Set<TEntity>()
                 .AsNoTracking();
@@ -96,11 +95,10 @@ namespace Infrastructure.Repositories.Base
         /// </summary>
         /// <param name="ids">Entities ids list</param>
         /// <returns>Entities list</returns>
-        public async Task<List<TEntity>> GetByIds(IEnumerable<int> ids)
+        public IQueryable<TEntity> GetByIds(IEnumerable<int> ids)
         {
-            return await _context.Set<TEntity>()
-                 .Where(x => ids.Contains(x.Id))
-                 .ToListAsync();
+            return _context.Set<TEntity>()
+                 .Where(x => ids.Contains(x.Id));
         }
 
         /// <summary>

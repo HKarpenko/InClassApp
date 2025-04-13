@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Domain.Models.Entities;
 using Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
 {
@@ -15,7 +16,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<Lecturer>> GetAllLecturers()
         {
-            return await _lecturersRepository.GetAllAsNoTracking();
+            return await _lecturersRepository.GetAllAsNoTracking().ToListAsync();
         }
     }
 }

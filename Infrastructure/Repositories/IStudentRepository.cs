@@ -31,6 +31,6 @@ namespace Infrastructure.Repositories
         /// </summary>
         /// <param name="ids">Students ids list</param>
         /// <returns>Students list</returns>
-        new Task<List<Student>> GetByIds(IEnumerable<int> ids);
+        new IQueryable<Student> GetByIds(IEnumerable<int> ids);
     }
 }

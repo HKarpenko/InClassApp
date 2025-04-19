@@ -23,7 +23,9 @@ namespace Application.Helpers
                 .ForMember(dest => dest.GroupName, opt => opt.MapFrom(src => src.Group.Name));
             CreateMap<Student, StudentDto>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.User.Name));
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.User.FirstName));
+            CreateMap<UserRegistrationDto, AppUser>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.FirstName + " " + src.LastName));
         }
     }
 }

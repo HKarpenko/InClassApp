@@ -1,4 +1,5 @@
 ﻿using Domain.Models.Dtos;
+using Domain.Models.Entities;
 
 namespace Application.Interfaces
 {
@@ -9,5 +10,6 @@ namespace Application.Interfaces
         Task<List<StudentDto>> GetStudentDtosByGroupId(int groupId);
         Task<IEnumerable<StudentDto>> GetAllStudents();
         Task<IEnumerable<StudentDto>> GetAllStudentsExcept(List<int> exceptIds);
+        Task CreateStudent(Student student);
     }
 }

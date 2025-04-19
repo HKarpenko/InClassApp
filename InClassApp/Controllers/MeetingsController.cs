@@ -196,7 +196,7 @@ namespace InClassApp.Controllers
                 return NotFound();
             }
 
-            var groups = await _groupRepository.GetAll();
+            var groups = await _groupRepository.GetAll().ToListAsync();
             ViewData["GroupId"] = meeting.GroupId;
             return View(meeting);
         }
@@ -238,7 +238,7 @@ namespace InClassApp.Controllers
                 return RedirectToAction("Details", "Groups", new { id = meeting.GroupId });
             }
 
-            var groups = await _groupRepository.GetAll();
+            var groups = await _groupRepository.GetAll().ToListAsync();
             ViewData["GroupId"] = new SelectList(groups, "Id", "Id", meeting.GroupId);
             return View(meeting);
         }
@@ -279,7 +279,7 @@ namespace InClassApp.Controllers
             var meeting = await _meetingRepository.GetById(id);
             var groupId = meeting.GroupId;
 
-            var meetingPresenceRecordIds = (await _presenceRecordRepository.GetAll())
+            var meetingPresenceRecordIds = (await _presenceRecordRepository.GetAll().ToListAsync())
                 .Where(x => x.MeetingId == meeting.Id)
                 .Select(x => x.Id);
 
@@ -339,7 +339,7 @@ namespace InClassApp.Controllers
 
         private async Task<bool> MeetingExists(int id)
         {
-            var groups = await _meetingRepository.GetAll();
+            var groups = await _meetingRepository.GetAll().ToListAsync();
             return groups.Any(e => e.Id == id);
         }
     }

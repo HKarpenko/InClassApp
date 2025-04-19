@@ -52,7 +52,7 @@ namespace InClassApp.Controllers
                 return NotFound();
             }
 
-            ViewData["Groups"] = await _groupRepository.GetGroupsBySubjectId((int)id);
+            ViewData["Groups"] = await _groupRepository.GetGroupsBySubjectId((int)id).ToListAsync();
             return View(subject);
         }
 

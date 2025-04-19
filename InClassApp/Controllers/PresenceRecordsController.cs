@@ -110,7 +110,7 @@ namespace InClassApp.Controllers
 
         private async Task<bool> PresenceRecordExists(int id)
         {
-            var presenceRecords = await _presenceRecordRepository.GetAll();
+            var presenceRecords = await _presenceRecordRepository.GetAll().ToListAsync();
             return presenceRecords.Any(e => e.Id == id);
         }
     }

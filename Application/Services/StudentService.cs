@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using AutoMapper;
 using Domain.Models.Dtos;
+using Domain.Models.Entities;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,5 +39,10 @@ public class StudentService(IMapper mapper, IStudentRepository studentRepository
             .Where(s => !exceptIds.Contains(s.Id))
             .ToListAsync();
         return mapper.Map<List<StudentDto>>(students);
+    }
+
+    public async Task CreateStudent(Student student)
+    {
+        await studentRepository.Add(student);
     }
 }

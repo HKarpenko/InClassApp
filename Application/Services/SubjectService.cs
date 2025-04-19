@@ -3,6 +3,7 @@ using AutoMapper;
 using Domain.Models.Dtos;
 using Domain.Models.Entities;
 using Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
 {
@@ -19,7 +20,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<Subject>> GetAllSubjects()
         {
-            return await _subjectRepository.GetAllAsNoTracking();
+            return await _subjectRepository.GetAllAsNoTracking().ToListAsync();
         }
 
         public async Task<Subject> GetSubjectById(int id)

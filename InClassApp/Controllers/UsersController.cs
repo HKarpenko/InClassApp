@@ -100,8 +100,8 @@ namespace InClassApp.Controllers
             SaveUserDto model = new SaveUserDto
             {
                 Id = user.Id,
-                Name = user.Name,
-                Surname = user.Surname,
+                Name = user.FirstName,
+                Surname = user.LastName,
                 PhoneNumber = user.PhoneNumber,
                 Email = user.Email,
                 Role = currentUserRoles.FirstOrDefault()
@@ -138,8 +138,8 @@ namespace InClassApp.Controllers
                         return View(userDto);
                     }
 
-                    userToUpdate.Name = userDto.Name;
-                    userToUpdate.Surname = userDto.Surname;
+                    userToUpdate.FirstName = userDto.Name;
+                    userToUpdate.LastName = userDto.Surname;
                     userToUpdate.PhoneNumber = userDto.PhoneNumber;
                     userToUpdate.Email = userDto.Email;
 

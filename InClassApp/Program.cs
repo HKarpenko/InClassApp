@@ -7,6 +7,7 @@ using Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Application.Interfaces;
 using Application.Services;
+using Infrastructure.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

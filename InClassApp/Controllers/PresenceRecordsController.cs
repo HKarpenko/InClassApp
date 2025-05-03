@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Domain.Models.Entities;
-using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Infrastructure.Interfaces;
 
 namespace InClassApp.Controllers
 {

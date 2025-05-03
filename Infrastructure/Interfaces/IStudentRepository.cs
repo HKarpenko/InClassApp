@@ -1,9 +1,9 @@
 ﻿using Domain.Models.Entities;
 using Infrastructure.Repositories.Base;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Interfaces
 {
-    public interface IStudentRepository : IBaseRepository<Student> 
+    public interface IStudentRepository : IBaseRepository<Student>
     {
         /// <summary>
         /// Gets student by index

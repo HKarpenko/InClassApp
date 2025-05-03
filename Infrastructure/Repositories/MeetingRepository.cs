@@ -2,6 +2,7 @@
 using Domain.Models.Entities;
 using Infrastructure.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
+using Infrastructure.Interfaces;
 
 namespace Infrastructure.Repositories
 {
@@ -24,12 +25,11 @@ namespace Infrastructure.Repositories
         /// Gets all the meetings
         /// </summary>
         /// <returns>Meetings list</returns>
-        public async new Task<List<Meeting>> GetAll()
+        public new IQueryable<Meeting> GetAll()
         {
-            return await _context.Meetings
+            return _context.Meetings
                 .Include(x => x.Group)
-                .Include(x => x.PresenceRecords)
-                .ToListAsync();
+                .Include(x => x.PresenceRecords);
         }
 
         /// <summary>

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Domain.Models.Entities;
-using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Domain.Models.Dtos;
@@ -20,7 +19,7 @@ public class GroupsController(
     IUserService _userService,
     IGroupService _groupService,
     ILecturerService _lecturerService,
-    IMeetingRepository _meetingRepository,
+    IMeetingService _meetingService,
     IStudentService _studentService,
     UserManager<AppUser> _userManager) : Controller
 {
@@ -66,7 +65,7 @@ public class GroupsController(
             return NotFound();
         }
 
-        ViewData["Meetings"] = await _meetingRepository.GetMeetingsByGroupId(groupId);
+        ViewData["Meetings"] = await _meetingService.GetMeetingDtosByGroupId(groupId);
         return View(group);
     }
 

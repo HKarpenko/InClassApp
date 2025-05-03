@@ -1,7 +1,7 @@
 ﻿using Domain.Models.Entities;
 using Infrastructure.Repositories.Base;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Interfaces
 {
     public interface IPresenceRecordRepository : IBaseRepository<PresenceRecord>
     {
@@ -10,6 +10,6 @@ namespace Infrastructure.Repositories
         /// </summary>
         /// <param name="meetingId">Meeting id</param>
         /// <returns>Presence records list</returns>
-        Task<List<PresenceRecord>> GetPresenceRecordsByMeetingId(int meetingId);
+        IQueryable<PresenceRecord> GetPresenceRecordsByMeetingId(int meetingId);
     }
 }

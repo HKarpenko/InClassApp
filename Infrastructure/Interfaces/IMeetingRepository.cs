@@ -1,7 +1,7 @@
 ﻿using Domain.Models.Entities;
 using Infrastructure.Repositories.Base;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Interfaces
 {
     public interface IMeetingRepository : IBaseRepository<Meeting>
     {

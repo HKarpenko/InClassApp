@@ -4,48 +4,36 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace InClassApp.Controllers
+namespace InClassApp.Controllers;
+
+/// <summary>
+/// Controller for home view
+/// </summary>
+public class HomeController(
+    UserManager<AppUser> userManager) : Controller
 {
     /// <summary>
-    /// Controller for home view
+    /// Gets home view
     /// </summary>
-    public class HomeController : Controller
+    /// <returns>Home view</returns>
+    public async Task<IActionResult> Index()
     {
-        private readonly UserManager<AppUser> _userManager;
-        private readonly ILogger<HomeController> _logger;
-
-        /// <summary>
-        /// Home controller constructor
-        /// </summary>
-        public HomeController(ILogger<HomeController> logger, IServiceProvider serviceProvider)
+        var currentUser = await userManager.GetUserAsync(HttpContext.User);
+        if (currentUser != null)
         {
-            _userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
-            _logger = logger;
+            return RedirectToAction("Index", "Groups");
         }
 
-        /// <summary>
-        /// Gets home view
-        /// </summary>
-        /// <returns>Home view</returns>
-        public async Task<IActionResult> Index()
-        {
-            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-            if (currentUser != null)
-            {
-                return RedirectToAction("Index", "Groups");
-            }
+        return View();
+    }
 
-            return View();
-        }
-
-        /// <summary>
-        /// Gets error view
-        /// </summary>
-        /// <returns>Error view</returns>
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+    /// <summary>
+    /// Gets error view
+    /// </summary>
+    /// <returns>Error view</returns>
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

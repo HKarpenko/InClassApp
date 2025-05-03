@@ -3,6 +3,7 @@ using Domain.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Infrastructure.Interfaces;
 
 namespace Infrastructure.Repositories
 {

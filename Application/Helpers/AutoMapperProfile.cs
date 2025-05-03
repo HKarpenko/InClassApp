@@ -10,6 +10,7 @@ namespace Application.Helpers
         {
             CreateMap<Subject, SaveSubjectDto>()
                 .ReverseMap();
+            CreateMap<PresenceRecord, PresenceRecordDto>();
             CreateMap<Group, SaveGroupDto>()
                 .ForMember(dest => dest.LecturersIds,
                     opt => opt.MapFrom(src => src.LecturerGroupRelations.Select(x => x.LecturerId)));
@@ -21,6 +22,7 @@ namespace Application.Helpers
                     opt => opt.MapFrom(src => src.LecturerGroupRelations.Select(lgr => lgr.Lecturer.User.UserName)));
             CreateMap<Meeting, MeetingDto>()
                 .ForMember(dest => dest.GroupName, opt => opt.MapFrom(src => src.Group.Name));
+            CreateMap<MeetingDto, Meeting>();
             CreateMap<Student, StudentDto>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.User.FirstName));

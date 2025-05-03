@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Views\Account\" />
-    <Folder Include="Views\Meetins\" />
+    <Folder Include="Views\Meetings\" />
     <Folder Include="Views\Subjects\" />
     <Folder Include="Views\PresenceRecords\" />
   </ItemGroup>

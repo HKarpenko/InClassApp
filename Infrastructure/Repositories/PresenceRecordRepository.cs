@@ -2,6 +2,7 @@
 using Domain.Models.Entities;
 using Infrastructure.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
+using Infrastructure.Interfaces;
 
 
 namespace Infrastructure.Repositories
@@ -26,14 +27,13 @@ namespace Infrastructure.Repositories
         /// Gets all the presence records
         /// </summary>
         /// <returns>Presence records list</returns>
-        public async new Task<List<PresenceRecord>> GetAll()
+        public new IQueryable<PresenceRecord> GetAll()
         {
-            return await _context.PresenceRecords
+            return _context.PresenceRecords
                 .Include(x => x.Meeting)
                     .ThenInclude(x => x.Group)
                 .Include(x => x.Student)
-                    .ThenInclude(x => x.User)
-                .ToListAsync();
+                    .ThenInclude(x => x.User);
         }
 
         /// <summary>
@@ -57,15 +57,14 @@ namespace Infrastructure.Repositories
         /// </summary>
         /// <param name="meetingId">Meeting id</param>
         /// <returns>Presence records list</returns>
-        public async Task<List<PresenceRecord>> GetPresenceRecordsByMeetingId(int meetingId)
+        public IQueryable<PresenceRecord> GetPresenceRecordsByMeetingId(int meetingId)
         {
-            return await _context.PresenceRecords
+            return _context.PresenceRecords
                 .Include(x => x.Meeting)
                     .ThenInclude(x => x.Group)
                 .Include(x => x.Student)
                     .ThenInclude(x => x.User)
-                .Where(x => x.MeetingId == meetingId)
-                .ToListAsync();
+                .Where(x => x.MeetingId == meetingId);
         }
     }
 }

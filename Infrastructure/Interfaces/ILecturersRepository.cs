@@ -1,9 +1,9 @@
 ﻿using Domain.Models.Entities;
 using Infrastructure.Repositories.Base;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Interfaces
 {
-    public interface ILecturersRepository : IBaseRepository<Lecturer> 
+    public interface ILecturersRepository : IBaseRepository<Lecturer>
     {
         /// <summary>
         /// Gets lecturer by user id as no tracking

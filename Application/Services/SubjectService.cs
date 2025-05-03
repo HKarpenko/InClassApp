@@ -2,7 +2,7 @@
 using AutoMapper;
 using Domain.Models.Dtos;
 using Domain.Models.Entities;
-using Infrastructure.Repositories;
+using Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services

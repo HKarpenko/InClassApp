@@ -1,7 +1,7 @@
 ﻿using Domain.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Interfaces
 {
     public interface IUserRepository
     {

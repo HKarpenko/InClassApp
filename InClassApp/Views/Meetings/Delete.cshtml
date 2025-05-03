@@ -1,4 +1,4 @@
-﻿@model Domain.Models.Entities.Meeting
+﻿@model Domain.Models.Dtos.MeetingDto
 
 @{
     ViewData["Title"] = "Delete";
@@ -46,10 +46,10 @@
             @Html.DisplayFor(model => model.MeetingEndDate)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Group)
+            @Html.DisplayNameFor(model => model.GroupName)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Group.Name)
+            @Html.DisplayFor(model => model.GroupName)
         </dd>
     </dl>
 </div>

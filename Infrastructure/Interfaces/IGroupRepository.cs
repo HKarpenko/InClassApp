@@ -1,9 +1,9 @@
 ﻿using Domain.Models.Entities;
 using Infrastructure.Repositories.Base;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Interfaces
 {
-    public interface IGroupRepository : IBaseRepository<Group> 
+    public interface IGroupRepository : IBaseRepository<Group>
     {
         /// <summary>
         /// Gets groups by subject id

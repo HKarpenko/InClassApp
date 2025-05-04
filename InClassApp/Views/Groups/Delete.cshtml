@@ -1,4 +1,4 @@
-﻿@model Domain.Models.Entities.Group
+﻿@model Domain.Models.Dtos.GroupDto
 
 @{
     ViewData["Title"] = "Delete";
@@ -46,18 +46,18 @@
             @Html.DisplayFor(model => model.StudiesSemestr)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Subject)
+            @Html.DisplayNameFor(model => model.SubjectName)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Subject.Id)
+            @Html.DisplayFor(model => model.SubjectName)
         </dd>
         <dt class="col-sm-2">
             Lecturers
         </dt>
         <dd class="col-sm-10">
-            @foreach (var relation in Model.LecturerGroupRelations)
+            @foreach (var lecturer in Model.Lecturers)
             {
-                <span>@relation.Lecturer.User.UserName</span>
+                <span>@lecturer</span>
             }
         </dd>
         <dt class="col-sm-2">

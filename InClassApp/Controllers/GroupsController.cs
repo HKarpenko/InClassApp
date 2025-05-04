@@ -28,7 +28,7 @@ public class GroupsController(
     /// </summary>
     /// <returns>Groups list view</returns>
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> GroupsList()
     {
         var currentUser = await _userManager.GetUserAsync(HttpContext.User);
         var userMainRole = currentUser != null ? await _userService.GetUserMainRole(currentUser) : null;

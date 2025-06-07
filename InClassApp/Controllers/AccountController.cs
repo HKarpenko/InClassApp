@@ -1,6 +1,5 @@
 ﻿using Application.Interfaces;
 using Domain.Models.Dtos;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InClassApp.Controllers;
@@ -75,7 +74,7 @@ public class AccountController(
         var loginResult = await accountService.LoginUser(userLoginDto);
         if (loginResult)
         {
-            return RedirectToAction("Index", "Groups");
+            return RedirectToAction("GroupsList", "Groups");
         }
         else
         {

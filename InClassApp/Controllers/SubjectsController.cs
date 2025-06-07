@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Domain.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
-using Application.Services;
 using Application.Interfaces;
 using Domain.Models.Dtos;
 using Infrastructure.Interfaces;

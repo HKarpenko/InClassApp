@@ -30,7 +30,7 @@
                         @if (SignInManager.IsSignedIn(User))
                         {
                             <li class="nav-item">
-                                <a class="nav-link nav-link-inclass" asp-area="" asp-controller="Groups" asp-action="Index">Groups</a>
+                                <a class="nav-link nav-link-inclass" asp-area="" asp-controller="Groups" asp-action="GroupsList">Groups</a>
                             </li>
                             @if (UserManager.GetRolesAsync(await UserManager.GetUserAsync(User)).Result.Any(x => x.Equals("Admin")))
                             {

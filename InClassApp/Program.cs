@@ -26,26 +26,7 @@ builder.Services.AddDefaultIdentity<AppUser>(options =>
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
-
-builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
-
-builder.Services.AddScoped<ISubjectService, SubjectService>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IGroupService, GroupService>();
-builder.Services.AddScoped<ILecturerService, LecturerService>();
-builder.Services.AddScoped<IMeetingService, MeetingService>();
-builder.Services.AddScoped<IAttendanceCodeManager, AttendanceCodeManager>();
-
-builder.Services.AddScoped<IGroupRepository, GroupRepository>();
-builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
-builder.Services.AddScoped<ILecturersRepository, LecturersRepository>();
-builder.Services.AddScoped<IMeetingRepository, MeetingRepository>();
-builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-builder.Services.AddScoped<IPresenceRecordRepository, PresenceRecordRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddHostedService<DbSeeder>();
+InitServices(builder);
 
 var app = builder.Build();
 
@@ -73,3 +54,30 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+static void InitServices(WebApplicationBuilder builder)
+{
+    builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+    builder.Services.AddControllersWithViews();
+    builder.Services.AddRazorPages();
+
+    builder.Services.AddScoped<ISubjectService, SubjectService>();
+    builder.Services.AddScoped<IAccountService, AccountService>();
+    builder.Services.AddScoped<IUserService, UserService>();
+    builder.Services.AddScoped<IStudentService, StudentService>();
+    builder.Services.AddScoped<IGroupService, GroupService>();
+    builder.Services.AddScoped<ILecturerService, LecturerService>();
+    builder.Services.AddScoped<IMeetingService, MeetingService>();
+    builder.Services.AddScoped<IAttendanceCodeManager, AttendanceCodeManager>();
+    builder.Services.AddScoped<IPresenceRecordService, PresenceRecordService>();
+
+    builder.Services.AddScoped<IGroupRepository, GroupRepository>();
+    builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
+    builder.Services.AddScoped<ILecturersRepository, LecturersRepository>();
+    builder.Services.AddScoped<IMeetingRepository, MeetingRepository>();
+    builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+    builder.Services.AddScoped<IPresenceRecordRepository, PresenceRecordRepository>();
+    builder.Services.AddScoped<IUserRepository, UserRepository>();
+    builder.Services.AddHostedService<DbSeeder>();
+}

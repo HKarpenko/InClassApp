@@ -35,7 +35,7 @@
                             @if (UserManager.GetRolesAsync(await UserManager.GetUserAsync(User)).Result.Any(x => x.Equals("Admin")))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link nav-link-inclass" asp-area="" asp-controller="Subjects" asp-action="Index">Subjects</a>
+                                    <a class="nav-link nav-link-inclass" asp-area="" asp-controller="Subjects" asp-action="SubjectsList">Subjects</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link nav-link-inclass" asp-area="" asp-controller="Users" asp-action="UsersList">Users</a>

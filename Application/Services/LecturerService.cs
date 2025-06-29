@@ -1,22 +1,20 @@
 ﻿using Application.Interfaces;
-using Domain.Models.Entities;
+using AutoMapper;
+using Domain.Models.Dtos;
 using Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Services
+namespace Application.Services;
+
+public class LecturerService(
+    ILecturersRepository lecturersRepository,
+    IMapper mapper) : ILecturerService
 {
-    public class LecturerService : ILecturerService
+    public async Task<List<LecturerDto>> GetAllLecturerDtos()
     {
-        private readonly ILecturersRepository _lecturersRepository;
-
-        public LecturerService(ILecturersRepository lecturersRepository)
-        {
-            _lecturersRepository = lecturersRepository;
-        }
-
-        public async Task<IEnumerable<Lecturer>> GetAllLecturers()
-        {
-            return await _lecturersRepository.GetAllAsNoTracking().ToListAsync();
-        }
+        var ls = await lecturersRepository.GetAllAsNoTracking()
+            .Include(l => l.User)
+            .ToListAsync();
+        return mapper.Map<List<LecturerDto>>(ls);
     }
 }

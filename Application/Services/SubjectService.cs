@@ -18,14 +18,15 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<Subject>> GetAllSubjects()
+        public async Task<List<SubjectDto>> GetAllSubjectDtos()
         {
-            return await _subjectRepository.GetAllAsNoTracking().ToListAsync();
+            var subjects = await _subjectRepository.GetAllAsNoTracking().ToListAsync();
+            return _mapper.Map<List<SubjectDto>>(subjects);
         }
 
-        public async Task<Subject> GetSubjectById(int id)
+        public async Task<SubjectDto> GetSubjectDtoById(int id)
         {
-            return await _subjectRepository.GetById(id);
+            return _mapper.Map<SubjectDto>(await _subjectRepository.GetById(id));
         }
 
         public async Task CreateSubject(SaveSubjectDto subjectDto)

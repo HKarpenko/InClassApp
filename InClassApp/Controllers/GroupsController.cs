@@ -51,7 +51,7 @@ public class GroupsController(
     public async Task<IActionResult> Details(int groupId)
     {
         var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-        var accessRight = currentUser != null ? _groupService.GetUserGroupAccessRights(currentUser, groupId)
+        var accessRight = currentUser != null ? await _groupService.GetUserGroupAccessRights(currentUser, groupId)
             : null;
         if (accessRight == null)
         {
@@ -77,8 +77,8 @@ public class GroupsController(
     [HttpGet]
     public async Task<IActionResult> Create()
     {
-        ViewData["Subjects"] = await _subjectService.GetAllSubjects();
-        ViewData["Lecturers"] = await _lecturerService.GetAllLecturers();
+        ViewData["Subjects"] = await _subjectService.GetAllSubjectDtos();
+        ViewData["Lecturers"] = await _lecturerService.GetAllLecturerDtos();
         return View();
     }
 
@@ -95,11 +95,11 @@ public class GroupsController(
         if (ModelState.IsValid)
         {
             await _groupService.CreateNewGroup(groupDto);
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(GroupsList));
         }
 
-        ViewData["Subjects"] = await _subjectService.GetAllSubjects();
-        ViewData["Lecturers"] = await _lecturerService.GetAllLecturers();
+        ViewData["Subjects"] = await _subjectService.GetAllSubjectDtos();
+        ViewData["Lecturers"] = await _lecturerService.GetAllLecturerDtos();
         return View();
     }
 
@@ -129,8 +129,8 @@ public class GroupsController(
         var currentUserRole = await _userService.GetUserMainRole(currentUser!);
 
         ViewData["Role"] = currentUserRole;
-        ViewData["Subjects"] = await _subjectService.GetAllSubjects();
-        ViewData["Lecturers"] = await _lecturerService.GetAllLecturers();
+        ViewData["Subjects"] = await _subjectService.GetAllSubjectDtos();
+        ViewData["Lecturers"] = await _lecturerService.GetAllLecturerDtos();
         return View(group);
     }
 
@@ -174,11 +174,11 @@ public class GroupsController(
                     throw;
                 }
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(GroupsList));
         }
 
-        ViewData["Subjects"] = await _subjectService.GetAllSubjects();
-        ViewData["Lecturers"] = await _lecturerService.GetAllLecturers();
+        ViewData["Subjects"] = await _subjectService.GetAllSubjectDtos();
+        ViewData["Lecturers"] = await _lecturerService.GetAllLecturerDtos();
         return View(groupDto);
     }
 
@@ -189,9 +189,9 @@ public class GroupsController(
     /// <returns>Group delete panel view</returns>
     [Authorize(Roles = "Admin")]
     [HttpGet]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(int groupId)
     {
-        var group = await _groupService.GetGroupDtoById(id);
+        var group = await _groupService.GetGroupDtoById(groupId);
         if (group == null)
         {
             return NotFound();
@@ -208,10 +208,10 @@ public class GroupsController(
     [HttpPost, ActionName("Delete")]
     [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
+    public async Task<IActionResult> DeleteConfirmed(int groupId)
     {
-        await _groupService.DeleteGroup(id);
-        return RedirectToAction(nameof(Index));
+        await _groupService.DeleteGroup(groupId);
+        return RedirectToAction(nameof(GroupsList));
     }
 
     /// <summary>
@@ -221,9 +221,10 @@ public class GroupsController(
     /// <returns>Group students list view</returns>
     [HttpGet]
     [Authorize(Roles = "Admin, Lecturer")]
+    [Route("Groups/StudentsList/{groupId:int}")]
     public async Task<IActionResult> StudentsList(int groupId)
     {
-        if (!(await VerifyReadWritePrivilege(groupId)))
+        if (!(await VerifyGroupWritePrivilege(groupId)))
         {
             return Unauthorized();
         }
@@ -243,7 +244,7 @@ public class GroupsController(
     [Route("Groups/AddStudent/{groupId:int}")]
     public async Task<IActionResult> AddStudent(int groupId)
     {
-        if (!(await VerifyReadWritePrivilege(groupId)))
+        if (!(await VerifyGroupWritePrivilege(groupId)))
         {
             return Unauthorized();
         }
@@ -267,7 +268,7 @@ public class GroupsController(
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddStudent(int groupId, [Bind("Index")] string index)
     {
-        if (!(await VerifyReadWritePrivilege(groupId)))
+        if (!(await VerifyGroupWritePrivilege(groupId)))
         {
             return Unauthorized();
         }
@@ -298,7 +299,7 @@ public class GroupsController(
     [Authorize(Roles = "Admin, Lecturer")]
     public async Task<IActionResult> RemoveStudent(int groupId, int studentId)
     {
-        if (!(await VerifyReadWritePrivilege(groupId)))
+        if (!(await VerifyGroupWritePrivilege(groupId)))
         {
             return Unauthorized();
         }
@@ -324,7 +325,7 @@ public class GroupsController(
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> RemoveStudentConfirmed(int groupId, int studentId)
     {
-        if (!(await VerifyReadWritePrivilege(groupId)))
+        if (!(await VerifyGroupWritePrivilege(groupId)))
         {
             return Unauthorized();
         }
@@ -339,7 +340,7 @@ public class GroupsController(
         return groups.Any(e => e.Id == id);
     }
 
-    private async Task<bool> VerifyReadWritePrivilege(int groupId)
+    private async Task<bool> VerifyGroupWritePrivilege(int groupId)
     {
         var currentUser = await _userManager.GetUserAsync(HttpContext.User);
         var accessRight = currentUser != null ? await _groupService.GetUserGroupAccessRights(currentUser, groupId)

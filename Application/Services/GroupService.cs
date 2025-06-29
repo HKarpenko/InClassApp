@@ -72,6 +72,11 @@ public class GroupService(IGroupRepository groupRepository,
         return mapper.Map<GroupDto>(await groupRepository.GetById(id));
     }
 
+    public async Task<List<GroupDto>> GetGroupDtosBySubjectId(int subjectId)
+    {
+        return mapper.Map<List<GroupDto>>(await groupRepository.GetGroupsBySubjectId(subjectId).ToListAsync());
+    }
+
     public async Task<SaveGroupDto> GetSaveGroupDtoById(int id)
     {
         var group = await groupRepository.GetByIdAsNoTracking(id);

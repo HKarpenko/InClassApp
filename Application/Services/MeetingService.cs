@@ -14,9 +14,9 @@ public class MeetingService(
     IMeetingRepository meetingRepository,
     IAttendanceCodeManager attendanceCodeManager) : IMeetingService
 {
-    public async Task<MeetingDto> GetMeetingDtosByGroupId(int groupId)
+    public async Task<List<MeetingDto>> GetMeetingDtosByGroupId(int groupId)
     {
-        return mapper.Map<MeetingDto>(await meetingRepository.GetMeetingsByGroupId(groupId));
+        return mapper.Map<List<MeetingDto>>(await meetingRepository.GetMeetingsByGroupId(groupId));
     }
 
     public async Task<MeetingDto> GetMeetingDtoById(int id)

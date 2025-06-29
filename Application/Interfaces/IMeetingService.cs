@@ -4,7 +4,7 @@ namespace Application.Interfaces
 {
     public interface IMeetingService
     {
-        Task<MeetingDto> GetMeetingDtosByGroupId(int groupId);
+        Task<List<MeetingDto>> GetMeetingDtosByGroupId(int groupId);
         Task<MeetingDto> GetMeetingDtoById(int id);
         Task<string> GetMeetingDecryptedCode(int id);
         Task CreateNewMeeting(MeetingDto meetingDto);

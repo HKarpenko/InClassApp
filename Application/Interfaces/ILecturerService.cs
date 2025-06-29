@@ -1,9 +1,9 @@
-﻿using Domain.Models.Entities;
+﻿using Domain.Models.Dtos;
 
 namespace Application.Interfaces
 {
     public interface ILecturerService
     {
-        Task<IEnumerable<Lecturer>> GetAllLecturers();
+        Task<List<LecturerDto>> GetAllLecturerDtos();
     }
 }

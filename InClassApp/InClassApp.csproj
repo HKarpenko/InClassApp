@@ -9,12 +9,15 @@
   <ItemGroup>
     <Folder Include="Views\Account\" />
     <Folder Include="Views\Meetings\" />
-    <Folder Include="Views\Subjects\" />
     <Folder Include="Views\PresenceRecords\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

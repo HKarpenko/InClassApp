@@ -3,7 +3,6 @@ using Domain.Models.Entities;
 using Domain.Models.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using System.Security.Claims;
 
 namespace Application.Services
 {
@@ -23,15 +22,15 @@ namespace Application.Services
             {
                 return null;
             }
-            else if (currentUserRoles.Any(x => x == "Admin"))
+            else if (currentUserRoles.Contains(nameof(UserRole.Admin)))
             {
                 return UserRole.Admin;
             }
-            else if (currentUserRoles.Any(x => x == "Lecturer"))
+            else if (currentUserRoles.Contains(nameof(UserRole.Lecturer)))
             {
                 return UserRole.Lecturer;
             }
-            else if (currentUserRoles.Any(x => x == "Student"))
+            else if (currentUserRoles.Contains(nameof(UserRole.Student)))
             {
                 return UserRole.Student;
             }

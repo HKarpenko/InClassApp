@@ -189,7 +189,7 @@ namespace Infrastructure.Repositories
         /// <returns>New added record id</returns>
         public async Task<int> AddLecturerGroupRelationNotSaved(int lecturerId, int groupId)
         {
-            var currentRelation = (await GetById(groupId)).LecturerGroupRelations.First(x => x.LecturerId == lecturerId);
+            var currentRelation = (await GetByIdAsNoTracking(groupId)).LecturerGroupRelations.FirstOrDefault(x => x.LecturerId == lecturerId);
             if (currentRelation != null)
             {
                 return currentRelation.Id;
@@ -213,7 +213,7 @@ namespace Infrastructure.Repositories
         /// <returns>Status of deletion</returns>
         public async Task<bool> DeleteLecturerGroupRelationNotSaved(int lecturerId, int groupId)
         {
-            var relation = (await GetById(groupId)).LecturerGroupRelations.First(r => r.LecturerId == lecturerId);
+            var relation = (await GetByIdAsNoTracking(groupId)).LecturerGroupRelations.FirstOrDefault(r => r.LecturerId == lecturerId);
             if (relation == null)
             {
                 return false;

@@ -1,13 +1,13 @@
 ﻿@model Domain.Models.Dtos.SaveGroupDto
-@using Domain.Models.Entities
+@using Domain.Models.Dtos
 
 @{
     ViewData["Title"] = "Edit";
 }
 
 @{
-    IEnumerable<Lecturer> allLecturers = ViewBag.Lecturers;
-    IEnumerable<Subject> allSubjects = ViewBag.Subjects;
+    IEnumerable<LecturerDto> allLecturers = ViewBag.Lecturers;
+    IEnumerable<SubjectDto> allSubjects = ViewBag.Subjects;
     UserRole role = ViewBag.Role;
 }
 
@@ -51,7 +51,7 @@
                 <div class="form-group">
                     <label asp-for="LecturersIds" class="control-label create-group-label">Lecturers</label>
                     @Html.DropDownListFor(m => m.LecturersIds, allLecturers.Select(x =>
-                        new SelectListItem { Text = x.User.UserName, Value = x.Id.ToString() }),
+                        new SelectListItem { Text = x.FullName, Value = x.Id.ToString() }),
                         new { @class = "form-control chosen-select", @multiple = true })
                 </div>
             }

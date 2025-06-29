@@ -7,12 +7,12 @@ namespace Domain.Models.Entities
         [ForeignKey(nameof(Meeting))]
         public int MeetingId { get; set; }
 
-        public Meeting Meeting { get; set; }
+        public Meeting? Meeting { get; set; }
 
         [ForeignKey(nameof(Student))]
         public int StudentId { get; set; }
 
-        public Student Student { get; set; }
+        public Student? Student { get; set; }
 
         public bool Status { get; set; }
     }

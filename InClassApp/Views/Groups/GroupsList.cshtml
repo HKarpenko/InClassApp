@@ -76,21 +76,21 @@
                 </td>
                 <td>
                     <div class="groups-list-actions">
-                        <a asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Details">
+                        <a asp-action="Details" asp-route-groupId="@item.Id" data-toggle="tooltip" data-placement="top" title="Details">
                             <i class="bi bi-card-list"></i>
                         </a>
                         @if (ViewBag.CurrentRole == UserRole.Admin)
                         {
-                            <a asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit">
+                            <a asp-action="Edit" asp-route-groupId="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit">
                                 <i class="bi bi-pencil-fill"></i>
                             </a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Delete">
+                            <a asp-action="Delete" asp-route-groupId="@item.Id" data-toggle="tooltip" data-placement="top" title="Delete">
                                 <i class="bi bi-trash-fill"></i>
                             </a>
                         }
                         else if (ViewBag.CurrentRole == UserRole.Lecturer)
                         {
-                            <a asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit">
+                            <a asp-action="Edit" asp-route-groupId="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit">
                                 <i class="bi bi-pencil-fill"></i>
                             </a>
                         }

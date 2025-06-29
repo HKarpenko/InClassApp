@@ -10,6 +10,7 @@ namespace Application.Interfaces
         Task<List<GroupDto>> GetGroupDtosByUser(AppUser user);
         Task<AccessRight?> GetUserGroupAccessRights(AppUser user, int groupId);
         Task<GroupDto> GetGroupDtoById(int id);
+        Task<List<GroupDto>> GetGroupDtosBySubjectId(int subjectId);
         Task<SaveGroupDto> GetSaveGroupDtoById(int id);
         Task CreateNewGroup(SaveGroupDto saveGroupDto);
         Task UpdateGroup(AppUser user, SaveGroupDto saveGroupDto);

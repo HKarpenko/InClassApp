@@ -45,6 +45,21 @@ namespace Infrastructure.Repositories
                  .FirstOrDefaultAsync();
         }
 
+        /// <summary>
+        /// Gets student by id
+        /// </summary>
+        /// <param name="id">Student id</param>
+        /// <returns>Student by id</returns>
+        public async new Task<Student> GetByIdAsNoTracking(int id)
+        {
+            return await _context.Student
+                 .Include(x => x.User)
+                 .AsNoTracking()
+                 .Where(x => x.Id == id)
+                 .FirstOrDefaultAsync();
+
+        }
+
         public new IQueryable<Student> GetAllAsNoTracking()
         {
             return _context.Student

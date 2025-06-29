@@ -25,8 +25,8 @@ namespace Application.Helpers
                 .ForMember(dest => dest.GroupName, opt => opt.MapFrom(src => src.Group.Name));
             CreateMap<MeetingDto, Meeting>();
             CreateMap<Student, StudentDto>()
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.User.FirstName));
+                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.User.FirstName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.User.LastName));
             CreateMap<Lecturer, LecturerDto>()
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.User.FirstName))
                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.User.LastName));

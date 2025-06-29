@@ -140,9 +140,9 @@ namespace Infrastructure.Repositories
         /// <returns>Status of deletion</returns>
         public async Task<bool> DeleteStudentGroupRelation(int studentId, int groupId)
         {
-            var group = await GetById(groupId);
+            var group = await GetByIdAsNoTracking(groupId);
             var relation = group.StudentGroupRelations.FirstOrDefault(r => r.StudentId == studentId);
-            if(relation == null)
+            if (relation == null)
             {
                 return false;
             }

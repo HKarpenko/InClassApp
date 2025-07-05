@@ -10,7 +10,11 @@ namespace Application.Helpers
         {
             CreateMap<Subject, SaveSubjectDto>()
                 .ReverseMap();
-            CreateMap<PresenceRecord, PresenceRecordDto>();
+            CreateMap<PresenceRecord, PresenceRecordDto>()
+                .ForMember(dest => dest.StudentName,
+                    opt => opt.MapFrom(src => $"{src.Student.User.FirstName} {src.Student.User.LastName}"))
+                .ForMember(dest => dest.StudentIndex,
+                    opt => opt.MapFrom(src => src.Student.Index));
             CreateMap<Subject, SubjectDto>();
             CreateMap<Group, SaveGroupDto>()
                 .ForMember(dest => dest.LecturersIds,

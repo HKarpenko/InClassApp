@@ -17,8 +17,7 @@ public class StudentService(
 {
     public async Task<StudentDto> GetStudentDtoById(int id)
     {
-        var xx = await studentRepository.GetByIdAsNoTracking(id);
-        return mapper.Map<StudentDto>(xx);
+        return mapper.Map<StudentDto>(await studentRepository.GetByIdAsNoTracking(id));
     }
 
     public async Task<StudentDto> GetStudentDtoByIndex(string index)

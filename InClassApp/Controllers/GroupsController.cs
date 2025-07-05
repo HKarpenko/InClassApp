@@ -279,7 +279,7 @@ public class GroupsController(
             var group = await _groupService.GetGroupDtoById(groupId);
             await _groupService.AddStudentGroupRelation(student.Id, group.Id);
 
-            return RedirectToAction("StudentsList", "Groups", new { id = groupId });
+            return RedirectToAction(nameof(StudentsList), new { id = groupId });
         }
 
         var students = await _groupService.GetAllGroups();
@@ -331,7 +331,7 @@ public class GroupsController(
         }
 
         await _groupService.DeleteStudentGroupRelation(studentId, groupId);
-        return RedirectToAction("StudentsList", "Groups", new { id = groupId });
+        return RedirectToAction(nameof(StudentsList), new { id = groupId });
     }
 
     private async Task<bool> GroupExists(int id)

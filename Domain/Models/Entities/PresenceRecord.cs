@@ -14,6 +14,6 @@ namespace Domain.Models.Entities
 
         public Student? Student { get; set; }
 
-        public bool Status { get; set; }
+        public bool Status { get; set; } = false;
     }
 }

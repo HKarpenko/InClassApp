@@ -113,10 +113,20 @@ namespace Infrastructure.Repositories
         public async Task<Student?> GetStudentByUserIdAsNoTracking(string userId)
         {
             return await _context.Student
+                 .Include(x => x.User)
                  .Include(x => x.StudentGroupRelations)
                  .Where(x => x.UserId == userId)
                  .AsNoTracking()
                  .FirstOrDefaultAsync();
+        }
+
+        public IQueryable<Student> GetStudentsByGroupIdAsNoTracking(int groupId)
+        {
+            return _context.Student
+                .Include(x => x.StudentGroupRelations)
+                .Where(s => s.StudentGroupRelations == null ? false : s.StudentGroupRelations.Count(r => r.GroupId == groupId) > 0)
+                .AsNoTracking();
+
         }
     }
 }

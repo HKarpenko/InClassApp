@@ -31,6 +31,14 @@ namespace Infrastructure.Interfaces
         /// </summary>
         /// <param name="ids">Students ids list</param>
         /// <returns>Students list</returns>
-        new IQueryable<Student> GetByIds(IEnumerable<int> ids);
+        IQueryable<Student> GetByIds(IEnumerable<int> ids);
+
+
+        /// <summary>
+        /// Gets students by ids list
+        /// </summary>
+        /// <param name="ids">Students ids list</param>
+        /// <returns>Students list</returns>
+        IQueryable<Student> GetStudentsByGroupIdAsNoTracking(int groupId);
     }
 }

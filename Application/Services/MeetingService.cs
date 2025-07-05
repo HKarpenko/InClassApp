@@ -1,17 +1,18 @@
-﻿using Application.Helpers;
-using Application.Helpers.Interfaces;
+﻿using Application.Helpers.Interfaces;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Models.Dtos;
 using Domain.Models.Entities;
 using Infrastructure.Interfaces;
-using Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services;
 
 public class MeetingService(
-    IMapper mapper, 
+    IMapper mapper,
     IMeetingRepository meetingRepository,
+    IPresenceRecordRepository presenceRecordRepository,
+    IStudentRepository studentRepository,
     IAttendanceCodeManager attendanceCodeManager) : IMeetingService
 {
     public async Task<List<MeetingDto>> GetMeetingDtosByGroupId(int groupId)
@@ -34,6 +35,14 @@ public class MeetingService(
     {
         var meeting = mapper.Map<Meeting>(meetingDto);
         await meetingRepository.Add(meeting);
+
+        var studentIds = await studentRepository.GetStudentsByGroupIdAsNoTracking(meeting.GroupId)
+            .Select(s => s.Id)
+            .ToListAsync();
+        foreach(var studentId in studentIds)
+        {
+            await presenceRecordRepository.Add(new PresenceRecord { MeetingId = meeting.Id, StudentId = studentId });
+        }
     }
 
     public async Task UpdateMeeting(MeetingDto meetingDto)

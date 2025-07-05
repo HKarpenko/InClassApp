@@ -10,7 +10,7 @@
 }
 
 <div>
-    <a asp-controller="Groups" asp-action="Details" asp-route-id="@Model.GroupId" data-toggle="tooltip" data-placement="top" title="Back">
+    <a asp-controller="Groups" asp-action="Details" asp-route-groupId="@Model.GroupId" data-toggle="tooltip" data-placement="top" title="Back">
         <i class="bi bi-arrow-left-circle-fill back-action"></i>
     </a>
 </div>
@@ -18,12 +18,12 @@
 <div class="row">
     <div class="col-10">
         <span class="details-header">Meetings details</span>
-        <a asp-action="Edit" asp-route-id="@Model.Id" data-toggle="tooltip" data-placement="top" title="Edit">
+        <a asp-action="Edit" asp-route-meetingId="@Model.Id" data-toggle="tooltip" data-placement="top" title="Edit">
             <i class="bi bi-pencil-fill meeting-edit-icon"></i>
         </a>
     </div>
     <div class="col-2">
-        @if (ViewBag.IsAttendanceCheckLaunched)
+        @if (ViewBag.IsCheckingLaunched)
         {
             <a href="#" class="btn btn-danger check-state-change-btn" onclick="CheckRealesed()">
                 Stop checking
@@ -79,7 +79,7 @@
         </div>
     </div>
 </div>
-@if (ViewBag.IsAttendanceCheckLaunched)
+@if (ViewBag.IsCheckingLaunched)
 {
     <a href="#" class="btn btn-info" onclick="OpenCodeModal()">
         Show code
@@ -91,14 +91,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">View code</h3>
-                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <a href="#" class="close" data-bs-dismiss="modal">&times;</a>
             </div>
             <div class="modal-body">
                 <h2 style="float: left" id="code-text">@ViewBag.DecryptedCode</h2>
                 <button class="btn btn-secondary float-right mt-3" style="float: right" onclick="copyText()">Copy</button>
             </div>
             <div class="modal-footer">
-                <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                <a href="#" class="btn btn-default" data-bs-dismiss="modal">Cancel</a>
             </div>
         </div>
     </div>
@@ -127,10 +127,10 @@
         {
             <tr>
                 <td>
-                    @item.Student.User.UserName
+                    @item.StudentName
                 </td>
                 <td>
-                    @item.Student.Index
+                    @item.StudentIndex
                 </td>
                 <td>
                     @(item.Status ? "Present" : "Absent")
@@ -162,14 +162,14 @@
         }
 
         var CheckRealesed = function () {
-            let shouldCheck = "@(!ViewBag.IsAttendanceCheckLaunched)";
+            let shouldCheck = "@(!ViewBag.IsCheckingLaunched)";
             $.ajax({
                 type: "POST",
                 url: "../../Meetings/AttendanceCheck",
                 data: { meetingId: @Model.Id, checkValue: shouldCheck },
                 success: function () {
                     $("#checkModal").modal('hide');
-                    if ("@ViewBag.IsAttendanceCheckLaunched" === "False") {
+                    if ("@ViewBag.IsCheckingLaunched" === "False") {
                         window.location = '../../Meetings/AttendanceCheck/@Model.Id';
                     }
                     else {

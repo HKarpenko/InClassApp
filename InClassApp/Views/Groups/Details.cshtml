@@ -127,19 +127,19 @@
                     <div class="meetings-list-actions">
                         @if (ViewBag.Rights == AccessRight.ReadWrite)
                         {
-                            <a asp-controller="Meetings" asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Details">
+                            <a asp-controller="Meetings" asp-action="Details" asp-route-meetingId="@item.Id" data-toggle="tooltip" data-placement="top" title="Details">
                                 <i class="bi bi-card-list"></i>
                             </a>
-                            <a asp-controller="Meetings" asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit">
+                            <a asp-controller="Meetings" asp-action="Edit" asp-route-meetingId="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit">
                                 <i class="bi bi-pencil-fill"></i>
                             </a>
-                            <a asp-controller="Meetings" asp-action="Delete" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Delete">
+                            <a asp-controller="Meetings" asp-action="Delete" asp-route-meetingId="@item.Id" data-toggle="tooltip" data-placement="top" title="Delete">
                                 <i class="bi bi-trash-fill"></i>
                             </a>
                         }
                         else if (ViewBag.Rights == AccessRight.ReadOnly)
                         {
-                            <a asp-controller="Meetings" asp-action="DetailsStudent" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Details">
+                            <a asp-controller="Meetings" asp-action="DetailsStudent" asp-route-meetingId="@item.Id" data-toggle="tooltip" data-placement="top" title="Details">
                                 <i class="bi bi-card-list"></i>
                             </a>
                         }

@@ -15,7 +15,7 @@ public class PresenceRecordService(
     public async Task<bool> GetCurrentStudentStatusByMeetingId(int meetingId)
     {
         var currentStudent = await studentService.GetStudentDtoOfCurrentUser();
-        return (await GetPresenceRecordDto(meetingId, currentStudent.Id)).Status;
+        return (await GetPresenceRecordDto(meetingId, currentStudent.Id))?.Status == true;
     }
 
     public async Task<PresenceRecordDto> GetPresenceRecordDto(int meetingId, int studentId)
@@ -24,14 +24,13 @@ public class PresenceRecordService(
         return mapper.Map<PresenceRecordDto>(presenceRecord);
     }
 
-    public async Task CreatePresenceRecordForCurrentStudent(int meetingId)
+    public async Task CheckInCurrentStudentByMeeting(int meetingId)
     {
-        var currentStudentId = (await studentService.GetStudentDtoOfCurrentUser()).Id;
-        var presenceRecord = await GetPresenceRecordDto(meetingId, currentStudentId);
-        if (presenceRecord == null)
-        {
-            await presenceRecordsRepository.Add(new PresenceRecord { MeetingId = meetingId, StudentId = currentStudentId });
-        }        
+        var currentStudentId = (await studentService.GetStudentDtoOfCurrentUser())?.Id ?? throw new DbUpdateException("Current user is not a student!");
+        PresenceRecord presenceRecord = await presenceRecordsRepository.GetPresenceRecordsByMeetingId(meetingId)
+            .FirstAsync(pr => pr.StudentId == currentStudentId);
+        presenceRecord.Status = true;
+        await presenceRecordsRepository.Update(presenceRecord);
     }
 
     public async Task<List<PresenceRecordDto>> GetPresenceRecordDtosByMeetingId(int meetingId)

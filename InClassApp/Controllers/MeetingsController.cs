@@ -18,21 +18,22 @@ public class MeetingsController(
     /// <summary>
     /// Gets view with meetings details for admin or lecturer
     /// </summary>
-    /// <param name="id">Meeting id</param>
+    /// <param name="meetingId">Meeting id</param>
     /// <returns>Meeting details view for admin or lecturer</returns>
     [Authorize(Roles = "Admin, Lecturer")]
     [HttpGet]
-    public async Task<IActionResult> Details(int? id)
+    [Route("Meetings/Details/{meetingId}")]
+    public async Task<IActionResult> Details(int meetingId)
     {
-        var meeting = id != null ? await meetingService.GetMeetingDtoById((int)id) : null;
+        var meeting = await meetingService.GetMeetingDtoById(meetingId);
         if (meeting == null)
         {
             return NotFound();
         }
 
-        ViewData["Records"] = await presenceRecordService.GetPresenceRecordDtosByMeetingId((int)id);
-        ViewData["DecryptedCode"] = await meetingService.GetMeetingDecryptedCode((int)id);
-        ViewData["IsLaunched"] = await meetingService.IsAttendanceCheckLaunched((int)id);
+        ViewData["Records"] = await presenceRecordService.GetPresenceRecordDtosByMeetingId(meetingId);
+        ViewData["DecryptedCode"] = await meetingService.GetMeetingDecryptedCode(meetingId);
+        ViewData["IsCheckingLaunched"] = await meetingService.IsAttendanceCheckLaunched(meetingId);
 
         return View(meeting);
     }
@@ -44,16 +45,16 @@ public class MeetingsController(
     /// <returns>Meeting details view for student</returns>
     [Authorize(Roles = "Admin, Student")]
     [HttpGet]
-    public async Task<IActionResult> DetailsStudent(int? id)
+    public async Task<IActionResult> DetailsStudent(int meetingId)
     {
-        var meeting = id != null ? await meetingService.GetMeetingDtoById((int)id) : null;
+        var meeting = await meetingService.GetMeetingDtoById(meetingId);
         if (meeting == null)
         {
             return NotFound();
         }
 
-        ViewData["Status"] = await presenceRecordService.GetCurrentStudentStatusByMeetingId((int)id);
-        ViewData["IsLaunched"] = await meetingService.IsAttendanceCheckLaunched((int)id);
+        ViewData["Status"] = await presenceRecordService.GetCurrentStudentStatusByMeetingId(meetingId);
+        ViewData["IsLaunched"] = await meetingService.IsAttendanceCheckLaunched(meetingId);
         return View(meeting);
     }
 
@@ -71,7 +72,7 @@ public class MeetingsController(
         bool isCodeValid = await meetingService.ValidateCode(meetingId, providedCode);
         if (isCodeValid)
         {
-            await presenceRecordService.CreatePresenceRecordForCurrentStudent(meetingId);
+            await presenceRecordService.CheckInCurrentStudentByMeeting(meetingId);
         }
         return isCodeValid;
     }
@@ -83,14 +84,9 @@ public class MeetingsController(
     /// <returns>Meeting create form view</returns>
     [Authorize(Roles = "Admin, Lecturer")]
     [HttpGet("Create/{groupId}")]
-    public IActionResult Create(int? groupId)
+    public IActionResult Create(int groupId)
     {
-        if (groupId == null)
-        {
-            return NotFound();
-        }
-
-        ViewData["GroupId"] = (int)groupId;
+        ViewData["GroupId"] = groupId;
         return View();
     }
 
@@ -108,7 +104,7 @@ public class MeetingsController(
         if (ModelState.IsValid)
         {
             await meetingService.CreateNewMeeting(meeting);
-            return RedirectToAction("Details", "Groups", new { id = groupId });
+            return RedirectToAction("Details", "Groups", new { groupId });
         }
 
         ViewData["GroupId"] = groupId;
@@ -122,9 +118,9 @@ public class MeetingsController(
     /// <returns>Edit meeting view</returns>
     [Authorize(Roles = "Admin, Lecturer")]
     [HttpGet]
-    public async Task<IActionResult> Edit(int? id)
+    public async Task<IActionResult> Edit(int meetingId)
     {
-        var meeting = id != null ? await meetingService.GetMeetingDtoById((int)id) : null;
+        var meeting = await meetingService.GetMeetingDtoById(meetingId);
         if (meeting == null)
         {
             return NotFound();
@@ -143,9 +139,9 @@ public class MeetingsController(
     [HttpPost]
     [Authorize(Roles = "Admin, Lecturer")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("MeetingStartDate,MeetingEndDate,Id")] MeetingDto meeting)
+    public async Task<IActionResult> Edit(int meetingId, [Bind("MeetingStartDate,MeetingEndDate,Id")] MeetingDto meeting)
     {
-        if (id != meeting.Id)
+        if (meetingId != meeting.Id)
         {
             return NotFound();
         }
@@ -168,9 +164,9 @@ public class MeetingsController(
     /// <returns>Meeting delete panel view</returns>
     [Authorize(Roles = "Admin, Lecturer")]
     [HttpGet]
-    public async Task<IActionResult> Delete(int? id)
+    public async Task<IActionResult> Delete(int meetingId)
     {
-        var meeting = id != null ? await meetingService.GetMeetingDtoById((int)id) : null;
+        var meeting = await meetingService.GetMeetingDtoById(meetingId);
         if (meeting == null)
         {
             return NotFound();
@@ -187,14 +183,14 @@ public class MeetingsController(
     [HttpPost, ActionName("Delete")]
     [Authorize(Roles = "Admin, Lecturer")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
+    public async Task<IActionResult> DeleteConfirmed(int meetingId)
     {
-        var meeting = await meetingService.GetMeetingDtoById(id) ?? throw new NullReferenceException("Meeting doesn't exist");
+        var meeting = await meetingService.GetMeetingDtoById(meetingId) ?? throw new NullReferenceException("Meeting doesn't exist");
         var groupId = meeting.GroupId;
 
-        await meetingService.DeleteMeeting(id);
+        await meetingService.DeleteMeeting(meetingId);
 
-        return RedirectToAction("Details", "Groups", new { id = groupId });
+        return RedirectToAction("Details", "Groups", new { groupId });
     }
 
     /// <summary>
@@ -209,7 +205,7 @@ public class MeetingsController(
     {
         var meeting = await meetingService.GetMeetingDtoById(meetingId);
 
-        ViewData["DecryptedCode"] = meetingService.GetMeetingDecryptedCode(meetingId);
+        ViewData["DecryptedCode"] = await meetingService.GetMeetingDecryptedCode(meetingId);
         return View(meeting);
     }
 
